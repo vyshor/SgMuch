@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+          crossorigin="anonymous">
+    <!--Import  Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <title>Dorothy</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <!--Zing Chart-->
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <!--Firebase-->
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyCYPIWmOOq4Kp6CDqDRyYauBWT4ChdZ5to",
+        authDomain: "whoisdorothyy.firebaseapp.com",
+        databaseURL: "https://whoisdorothyy.firebaseio.com",
+        projectId: "whoisdorothyy",
+        storageBucket: "whoisdorothyy.appspot.com",
+        messagingSenderId: "1058770291260"
+      };
+      firebase.initializeApp(config);
+      const db = firebase.firestore();
+      db.settings({timestampsInSnapshots: true});
+    </script>
+    <script src="/build.js"></script>
+  </body>
+</html>
