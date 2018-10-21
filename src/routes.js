@@ -12,10 +12,10 @@ Vue.use(Router);
 
 let router = new Router({
   routes: [
-    {
-      path: '*',
-      redirect: '/login'
-    },
+    // {
+    //   path: '*',
+    //   redirect: '/login'
+    // },
     {
       path: '/',
       name: 'Homepage',
