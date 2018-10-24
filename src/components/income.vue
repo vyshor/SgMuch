@@ -14,7 +14,7 @@
               <p class="col l1 push-l1">S$</p>
               <div class="col l8 push-l1">
                 <div class="input-field">
-                  <input v-model="monthly_income" type="text" name="monthly_income" class="validate"
+                  <input v-model="monthly_income" type="number" name="monthly_income" class="validate"
                          id="monthly_income_field" step="0.01"/>
                 </div>
                 <!--<label for="monthly_income"></label>-->

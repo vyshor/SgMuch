@@ -8,10 +8,12 @@
 </template>
 
 <script>
+  import image from "../assets/logo.png"
+
   export default {
     data: function () {
       return {
-        image: 'https://github.com/vyshor/SgMuch/blob/master/assets/logo.png?raw=true'
+        image
       }
     }
   }

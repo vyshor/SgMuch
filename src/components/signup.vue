@@ -63,12 +63,13 @@
 
 <script>
   import firebase from 'firebase';
+  import image from "../assets/logo.png";
 
   export default {
     name: "signUp",
     data() {
       return {
-        image: 'https://github.com/vyshor/SgMuch/blob/master/assets/logo.png?raw=true',
+        image,
         name: '',
         email: '',
         password: ''
@@ -158,7 +159,7 @@
   #homepage_top {
     height: 840px;
 
-    background-image: url('https://github.com/vyshor/SgMuch/blob/master/assets/backdrop_clear.png?raw=true');
+    background-image: url('../assets/backdrop_clear.png');
     background-position: center bottom;
     background-repeat: no-repeat;
     background-size: cover;
