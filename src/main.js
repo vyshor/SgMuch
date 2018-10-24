@@ -3,8 +3,13 @@ import App from './App.vue'
 import VueResource from 'vue-resource'
 import router from './routes'
 import firebase from 'firebase'
+import 'materialize-css'
+import 'materialize-css/dist/css/materialize.css'
+import AsyncComputed from 'vue-async-computed'
+import 'babel-polyfill'
 
 Vue.use(VueResource);
+Vue.use(AsyncComputed);
 
 //Custom directives
 //Global directives

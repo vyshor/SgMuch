@@ -16,12 +16,10 @@
 </template>
 
 <script>
-  import image from "../assets/logo.png";
-
   export default {
     data: function () {
       return {
-        image: image
+        image: 'https://github.com/vyshor/SgMuch/blob/master/assets/logo.png?raw=true'
       }
     }
   }
@@ -31,7 +29,7 @@
   #homepage_top {
     height: 840px;
 
-    background-image: url('../assets/backdrop_blur.png');
+    background-image: url('https://raw.githubusercontent.com/vyshor/SgMuch/master/assets/backdrop_blur.png?token=AllDypA3Ettum1GodoVMYGwwjRFj94KJks5b2hQBwA%3D%3D');
     background-position: center bottom;
     background-repeat: no-repeat;
     background-size: cover;

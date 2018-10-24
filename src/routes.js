@@ -7,6 +7,7 @@ import login from './components/login.vue'
 import signup from './components/signup.vue'
 import loggedout from './components/loggedout.vue'
 import dashboard from './components/dashboard.vue'
+import income from './components/income.vue'
 
 Vue.use(Router);
 
@@ -40,6 +41,14 @@ let router = new Router({
       path: '/dashboard',
       name: 'Dashboard',
       component: dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/dashboard/income',
+      name: 'Income',
+      component: income,
       meta: {
         requiresAuth: true
       }

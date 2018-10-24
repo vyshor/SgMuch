@@ -5,7 +5,7 @@
     <div class="row" id="dashboard_main">
       <div id="plan_details" class="col l9">
         <div class="center row">
-          <a class="btn btn-large" id="start_new_plan">Start new plan</a>
+          <router-link to="/dashboard/income"><a class="btn btn-large" id="start_new_plan">Start new plan</a></router-link>
         </div>
       </div>
       <div id="savedplans" class="col l3">
@@ -25,6 +25,11 @@
     components: {
       'logo_dashboard': logo_dashboard,
       'navbar_dashboard': navbar_dashboard
+    },
+    data() {
+      return {
+        // currentState: "housing"
+      }
     }
   }
 </script>

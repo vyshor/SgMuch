@@ -62,14 +62,13 @@
 </template>
 
 <script>
-  import image from "../assets/logo.png";
   import firebase from 'firebase';
 
   export default {
     name: "signUp",
     data() {
       return {
-        image,
+        image: 'https://github.com/vyshor/SgMuch/blob/master/assets/logo.png?raw=true',
         name: '',
         email: '',
         password: ''
@@ -133,7 +132,8 @@
           timestampsInSnapshots: true
         });
 
-        db.collection('users').doc('' + uid).collection('details').doc('profile').set({name:name, email:email, password: password});
+        // Initialise the user info
+        db.collection('users').doc('' + uid).set({name:name, email:email, password: password, planCount: 0});
       }
 
     }
@@ -158,7 +158,7 @@
   #homepage_top {
     height: 840px;
 
-    background-image: url('../assets/backdrop_clear.png');
+    background-image: url('https://github.com/vyshor/SgMuch/blob/master/assets/backdrop_clear.png?raw=true');
     background-position: center bottom;
     background-repeat: no-repeat;
     background-size: cover;

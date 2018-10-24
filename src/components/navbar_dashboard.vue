@@ -7,7 +7,7 @@
           <li><router-link to="/profile">Profile</router-link></li>
           <li><a v-on:click="logout">Logout</a></li>
         </ul>
-        <ul class="sidenav grey lighten-2" id="mobile-menu">
+        <ul class="sidenav grey lighten-2" id="mobile-menu" ref="sidenav">
           <li><router-link to="/dashboard">Dashboard</router-link></li>
           <li><router-link to="/profile">Profile</router-link></li>
           <li><a v-on:click="logout">Logout</a></li>
@@ -28,11 +28,11 @@
             this.$router.replace('loggedout');
           })
         }
+      },
+      mounted() {
+          $(this.$refs.sidenav).sidenav();
       }
     }
-    $(document).ready(() => {
-      $('.sidenav').sidenav();
-    });
 </script>
 
 <style scoped>

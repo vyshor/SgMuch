@@ -26,14 +26,13 @@
 </template>
 
 <script>
-  import image from "../assets/logo.png";
   import firebase from 'firebase';
 
   export default {
     name: 'login',
     data() {
       return {
-        image,
+        image: 'https://github.com/vyshor/SgMuch/blob/master/assets/logo.png?raw=true',
         email: 'hara@hara.com',
         password: 'dingdong'
       }
@@ -72,7 +71,7 @@
   #homepage_top {
     height: 840px;
 
-    background-image: url('../assets/backdrop_clear.png');
+    background-image: url('https://github.com/vyshor/SgMuch/blob/master/assets/backdrop_clear.png?raw=true');
     background-position: center bottom;
     background-repeat: no-repeat;
     background-size: cover;

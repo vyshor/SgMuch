@@ -21,7 +21,8 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
-          }
+          },
+          limit: 10000
           // other vue-loader options go here
         }
       },
@@ -41,7 +42,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm.js',
+      // 'jquery': 'materialize-css/node_modules/jquery/dist/jquery.js'
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
@@ -50,6 +52,14 @@ module.exports = {
     noInfo: true,
     overlay: true
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jquery: 'jquery',
+      'window.jQuery': 'jquery',
+      jQuery: 'jquery'
+    })
+  ],
   performance: {
     hints: false
   },
