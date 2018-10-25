@@ -1,0 +1,46 @@
+{
+    "BMW": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Mercedes": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Volvo": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Mini": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Toyota": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Nissan": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Mitsubitshi": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Mazda": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Honda": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Ford": {
+        "0": "below1600",
+        "1": "above1600"
+    },
+    "Chevrolet": {
+        "0": "below1600",
+        "1": "above1600"
+    }
+}
