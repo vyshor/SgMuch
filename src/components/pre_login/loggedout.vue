@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import image from "../assets/logo.png";
+  import image from "../../assets/logo.png";
 
   export default {
     data: function () {
@@ -31,7 +31,7 @@
   #homepage_top {
     height: 840px;
 
-    background-image: url('../assets/backdrop_blur.png');
+    background-image: url('../../assets/backdrop_blur.png');
     background-position: center bottom;
     background-repeat: no-repeat;
     background-size: cover;

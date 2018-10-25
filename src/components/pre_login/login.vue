@@ -27,7 +27,7 @@
 
 <script>
   import firebase from 'firebase';
-  import image from "../assets/logo.png"
+  import image from "../../assets/logo.png"
 
   export default {
     name: 'login',
@@ -72,7 +72,7 @@
   #homepage_top {
     height: 840px;
 
-    background-image: url('../assets/backdrop_clear.png');
+    background-image: url('../../assets/backdrop_clear.png');
     background-position: center bottom;
     background-repeat: no-repeat;
     background-size: cover;

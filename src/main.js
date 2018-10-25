@@ -7,6 +7,7 @@ import 'materialize-css'
 import 'materialize-css/dist/css/materialize.css'
 import AsyncComputed from 'vue-async-computed'
 import 'babel-polyfill'
+import * as VueGoogleMaps from "vue2-google-maps"
 
 Vue.use(VueResource);
 Vue.use(AsyncComputed);
@@ -30,6 +31,13 @@ Vue.directive('theme', {
       el.style.background = '#ddd';
       el.style.padding = '20px';
     }
+  }
+});
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: "AIzaSyANzkX8usvRMGp7TJSLFVaFtq-rCXSXfQ0",
+    libraries: "places" // necessary for places input
   }
 });
 
@@ -60,5 +68,8 @@ firebase.auth().onAuthStateChanged((user) => {
       render: h => h(App),
       router
     });
+
+    global.vm = app; //Define you app variable globally
   }
 });
+

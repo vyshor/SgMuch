@@ -70,10 +70,10 @@
 </template>
 
 <script>
-  import logo_dashboard from "./logo_dashboard";
-  import navbar_dashboard from "./navbar_dashboard";
-  import progressbar from "./progressbar";
-  import nextbar from "./nextbar";
+  import logo_dashboard from "../dashboard/logo_dashboard";
+  import navbar_dashboard from "../dashboard/navbar_dashboard";
+  import progressbar from "../dashboard/progressbar";
+  import nextbar from "../dashboard/nextbar";
 
   let GITRAW = "https://raw.githubusercontent.com/vyshor/university_expense/master/";
 
@@ -127,15 +127,18 @@
         const data = await this.getSalary(selected_uni);
         const cost_salary = JSON.parse(data);
         if (cost_salary[selected_course] === undefined) {
-          switch(selected_uni){
-            case 'NUS': selected_course = 'Architecture';
-                        this.course_selected = 'Architecture';
+          switch (selected_uni) {
+            case 'NUS':
+              selected_course = 'Architecture';
+              this.course_selected = 'Architecture';
               break;
-            default: selected_course = 'Accountancy';
+            default:
+              selected_course = 'Accountancy';
               this.course_selected = 'Accountancy';
           }
         }
-        return "S$ " + cost_salary[selected_course]["median_salary"];
+        const estimated_salary = '' + cost_salary[selected_course]["median_salary"];
+        return "S$ " + parseInt(estimated_salary).toLocaleString();
       }
     }
   }

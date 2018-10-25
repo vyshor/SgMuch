@@ -2,12 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from 'firebase'
 
-import homepage from './components/homepage.vue'
-import login from './components/login.vue'
-import signup from './components/signup.vue'
-import loggedout from './components/loggedout.vue'
-import dashboard from './components/dashboard.vue'
-import income from './components/income.vue'
+import homepage from './components/pre_login/homepage.vue'
+import login from './components/pre_login/login.vue'
+import signup from './components/pre_login/signup.vue'
+import loggedout from './components/pre_login/loggedout.vue'
+import dashboard from './components/dashboard/dashboard.vue'
+import income from './components/individual_process/income.vue'
+import housing from './components/individual_process/housing.vue'
+import car from './components/individual_process/car.vue'
 
 Vue.use(Router);
 
@@ -49,6 +51,22 @@ let router = new Router({
       path: '/dashboard/income',
       name: 'Income',
       component: income,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/dashboard/housing',
+      name: 'Housing',
+      component: housing,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/dashboard/car',
+      name: 'Car',
+      component: car,
       meta: {
         requiresAuth: true
       }
