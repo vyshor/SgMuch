@@ -86,7 +86,7 @@
           }
         });
 
-        xhr.open("POST", "http://microservice.dev.bambu.life/api/generalCalculator/carPriceCalculators/getCarPrice", true);
+        xhr.open("POST", "https://microservice.dev.bambu.life/api/generalCalculator/carPriceCalculators/getCarPrice", true);
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send(data);
       },
