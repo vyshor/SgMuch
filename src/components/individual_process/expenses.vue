@@ -1,5 +1,7 @@
 <template>
   <div>
+    <!--The only workaround http and https api problem-->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <progressbar v-bind:currentState="currentState"></progressbar>
@@ -76,6 +78,7 @@
 </template>
 
 <script>
+  import firebase from 'firebase';
   import logo_dashboard from "../dashboard/logo_dashboard";
   import navbar_dashboard from "../dashboard/navbar_dashboard";
   import progressbar from "../dashboard/progressbar";
@@ -94,10 +97,12 @@
     mixins: [formatPieData],
     data() {
       return {
+        user_id: firebase.auth().currentUser.uid,
+        plan_id: this.$route.params.plan_id,
         currentState: "expenses",
         path: ['/dashboard/viewplan', '/dashboard/car', '/dashboard/viewplan'],
         activity: '',
-        amount: 0,
+        amount: '',
         frequency: 'daily',
         table_data: [{
           activity: "Grocery",
@@ -142,7 +147,7 @@
           }
         });
 
-        xhr.open("GET", "https://dev.bambu.life:8081/api/TotalExpenseEstimator?monthly_income=5000");
+        xhr.open("GET", "http://dev.bambu.life:8081/api/TotalExpenseEstimator?monthly_income=5000");
         xhr.send(data);
       },
       estimateBreakdown(expense) {
@@ -158,7 +163,7 @@
           }
         });
 
-        xhr.open("GET", "https://dev.bambu.life:8081/api/ExpenseEstimator?total_expense=" + expense);
+        xhr.open("GET", "http://dev.bambu.life:8081/api/ExpenseEstimator?total_expense=" + expense);
         xhr.send(data);
       },
       convertPayloadToData(payload) {
@@ -175,6 +180,8 @@
       }
     },
     mounted() {
+      console.log(this.plan_id);
+      console.log(this.user_id);
     }
   }
 

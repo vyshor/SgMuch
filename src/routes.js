@@ -73,7 +73,7 @@ let router = new Router({
       }
     },
     {
-      path: '/dashboard/expenses',
+      path: '/dashboard/expenses/:plan_id',
       name: 'Expenses',
       component: expenses,
       meta: {
