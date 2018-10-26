@@ -107,6 +107,7 @@
           amount: 50,
           frequency: "weekly"
         }],
+        preloaded_estimated_data: [],
         chartOptions: {
           chart: {
             title: 'Monthly Expenses Breakdown',
@@ -132,6 +133,10 @@
         this.frequency = 'daily';
       },
       estimateExpense() {
+        if (this.preloaded_estimated_data.length)
+        this.table_data = this.table_data.concat(this.preloaded_estimated_data);
+      },
+      preloadEstimateExpense() {
         let data = JSON.stringify(false);
 
         let xhr = new XMLHttpRequest();
@@ -161,7 +166,7 @@
           }
         });
 
-        xhr.open("GET", 'https://cors-anywhere.herokuapp.com/' +"http://dev.bambu.life:8081/api/ExpenseEstimator?total_expense=" + expense);
+        xhr.open("GET", 'https://cors-anywhere.herokuapp.com/' + "http://dev.bambu.life:8081/api/ExpenseEstimator?total_expense=" + expense);
         xhr.send(data);
       },
       convertPayloadToData(payload) {
@@ -172,12 +177,14 @@
               amount: parseInt(expenseCategory["IndividualExpense"]),
               frequency: "monthly"
             };
-            this.table_data.push(data);
+            this.preloaded_estimated_data.push(data);
           }
         }
+        console.log("preload completed");
       }
     },
     mounted() {
+      this.preloadEstimateExpense();
       console.log(this.plan_id);
       console.log(this.user_id);
     }
