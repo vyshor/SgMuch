@@ -142,7 +142,7 @@
           }
         });
 
-        xhr.open("GET", "http://dev.bambu.life:8081/api/TotalExpenseEstimator?monthly_income=5000");
+        xhr.open("GET", "https://dev.bambu.life:8081/api/TotalExpenseEstimator?monthly_income=5000");
         xhr.send(data);
       },
       estimateBreakdown(expense) {
@@ -158,7 +158,7 @@
           }
         });
 
-        xhr.open("GET", "http://dev.bambu.life:8081/api/ExpenseEstimator?total_expense=" + expense);
+        xhr.open("GET", "https://dev.bambu.life:8081/api/ExpenseEstimator?total_expense=" + expense);
         xhr.send(data);
       },
       convertPayloadToData(payload) {
