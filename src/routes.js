@@ -10,6 +10,7 @@ import dashboard from './components/dashboard/dashboard.vue'
 import income from './components/individual_process/income.vue'
 import housing from './components/individual_process/housing.vue'
 import car from './components/individual_process/car.vue'
+import expenses from './components/individual_process/expenses.vue'
 
 Vue.use(Router);
 
@@ -67,6 +68,14 @@ let router = new Router({
       path: '/dashboard/car',
       name: 'Car',
       component: car,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/dashboard/expenses',
+      name: 'Expenses',
+      component: expenses,
       meta: {
         requiresAuth: true
       }

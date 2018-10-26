@@ -5,38 +5,88 @@
     <progressbar v-bind:currentState="currentState"></progressbar>
     <nextbar v-bind:info="{currentState, path}"></nextbar>
     <div id="dashboard_main">
-      <div id="car_images_container" class="center carousel" ref="car_images">
-        <a class="carousel-item" href="#one!"><img src="https://lorempixel.com/250/250/nature/1"></a>
-        <a class="carousel-item" href="#two!"><img src="https://lorempixel.com/250/250/nature/2"></a>
-        <a class="carousel-item" href="#three!"><img src="https://lorempixel.com/250/250/nature/3"></a>
-        <a class="carousel-item" href="#four!"><img src="https://lorempixel.com/250/250/nature/4"></a>
-        <a class="carousel-item" href="#five!"><img src="https://lorempixel.com/250/250/nature/5"></a>
+      <div id="price_car">
+        <div id="car_images_container" class="center carousel" ref="car_images">
+          <a class="carousel-item" href="#one!"><img src="https://lorempixel.com/250/250/nature/1"></a>
+          <a class="carousel-item" href="#two!"><img src="https://lorempixel.com/250/250/nature/2"></a>
+          <a class="carousel-item" href="#three!"><img src="https://lorempixel.com/250/250/nature/3"></a>
+          <a class="carousel-item" href="#four!"><img src="https://lorempixel.com/250/250/nature/4"></a>
+          <a class="carousel-item" href="#five!"><img src="https://lorempixel.com/250/250/nature/5"></a>
+        </div>
+        <form id="car_info" class="center row">
+          <div class="row">
+            <p class="col l4 info_text">Brand:</p>
+            <div class="input-field browser-default col l6">
+              <select name="brand" class="browser-default" id="car_brand" v-model="selected_brand"
+                      v-on:change="updateModelDropdown">
+                <option v-for="carBrand in car_list" :value="carBrand.carBrand">{{ carBrand.carBrand }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <p class="col l4 info_text">Model:</p>
+            <div class="input-field browser-default col l6">
+              <select name="model" class="browser-default" id="car_model" v-model="selected_model" v-on:change="updateCarousel">
+                <option v-for="carModel in model_list" :value="carModel.carModel">{{ carModel.carModel }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <p class="col l4 info_text">Price:</p>
+            <p class="col l6" id="car_price">{{ calculatedPrice }}</p>
+          </div>
+          <div class="row">
+            <input class="btn color_btn" type="Submit" value="Calculate" v-on:click="getPrice" id="get_price_btn"></input>
+          </div>
+        </form>
       </div>
-      <form id="car_info" class="center row">
-        <div class="row">
-          <p class="col l4 info_text">Brand:</p>
-          <div class="input-field browser-default col l6">
-            <select name="brand" class="browser-default" id="car_brand" v-model="selected_brand" v-on:change="updateModelDropdown">
-              <option v-for="carBrand in car_list" :value="carBrand.carBrand">{{ carBrand.carBrand }}</option>
-            </select>
+      <div id="bank_details_container" v-show="show_bank_details" class="container center">
+      <!--<div id="bank_details_container" class="container center">-->
+        <slick class="" ref="bank_details_slider" :options="slickOptions" @afterChange="handleAfterChangeBank">
+          <div class="card" href="#one!">
+            <div class="card-content">
+              <span class="card-title">Bank 1</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+                I am convenient because I require little markup to use effectively.</p>
+            </div>
+            <div class="card-action" id="bank_details_0">
+              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank" v-bind:class="{disabled: selectedBank !== 0}">Save Plan</a>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <p class="col l4 info_text">Model:</p>
-          <div class="input-field browser-default col l6">
-            <select name="model" class="browser-default" id="car_model" v-model="selected_model">
-              <option v-for="carModel in model_list" :value="carModel.carModel">{{ carModel.carModel }}</option>
-            </select>
+          <div class="card" href="#one!">
+            <div class="card-content">
+              <span class="card-title">Bank 2</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+                I am convenient because I require little markup to use effectively.</p>
+            </div>
+            <div class="card-action" >
+              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank" v-bind:class="{disabled: selectedBank !== 1}">Save Plan</a>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <p class="col l4   info_text">Price:</p>
-          <p class="col l6" id="car_price">{{ calculatedPrice }}</p>
-        </div>
-        <div class="row">
-          <input class="btn" type="Submit" value="Calculate" v-on:click="getPrice" id="get_price_btn"></input>
-        </div>
-      </form>
+          <div class="card" href="#one!">
+            <div class="card-content">
+              <span class="card-title">Bank 3</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+                I am convenient because I require little markup to use effectively.</p>
+            </div>
+            <div class="card-action"  >
+              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank" v-bind:class="{disabled: selectedBank !== 2}">Save Plan</a>
+            </div>
+          </div>
+          <div class="card" href="#one!">
+            <div class="card-content">
+              <span class="card-title">Bank 4</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+                I am convenient because I require little markup to use effectively.</p>
+            </div>
+            <div class="card-action"  >
+              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank" v-bind:class="{disabled: selectedBank !== 3}">Save Plan</a>
+            </div>
+          </div>
+
+        </slick>
+      </div>
+
     </div>
   </div>
 </template>
@@ -46,13 +96,18 @@
   import navbar_dashboard from "../dashboard/navbar_dashboard";
   import progressbar from "../dashboard/progressbar";
   import nextbar from "../dashboard/nextbar";
+  import Slick from 'vue-slick';
+  import 'slick-carousel/slick/slick.css';
+  import 'slick-carousel/slick/slick-theme.css';
+  import * as M from "materialize-css";
 
   export default {
     components: {
       'logo_dashboard': logo_dashboard,
       'navbar_dashboard': navbar_dashboard,
       'progressbar': progressbar,
-      'nextbar': nextbar
+      'nextbar': nextbar,
+      Slick
     },
     data() {
       return {
@@ -63,12 +118,41 @@
         model_table: {},
         model_list: [],
         selected_model: '',
-        calculatedPrice: ''
+        calculatedPrice: '',
+        show_bank_details: false,
+        selectedBank: 0,
+        slickOptions: {
+          centerMode: true,
+          centerPadding: '60px',
+          slidesToShow: 3,
+          responsive: [
+            {
+              breakpoint: 768,
+              settings: {
+                arrows: false,
+                centerMode: true,
+                centerPadding: '40px',
+                slidesToShow: 3
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                arrows: false,
+                centerMode: true,
+                centerPadding: '40px',
+                slidesToShow: 1
+              }
+            }
+          ]
+        }
       }
+
     },
     methods: {
       getPrice: function (e) {
         e.preventDefault();
+        this.updateCarousel();
         let data = JSON.stringify({
           country: "Thailand",
           brand: this.selected_brand,
@@ -81,7 +165,7 @@
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === this.DONE) {
             let reply_data = JSON.parse(this.responseText);
-            self.calculatedPrice = "S$ " + parseInt(parseFloat(reply_data['carPrice'][0]['carprice'])*0.042).toLocaleString();
+            self.calculatedPrice = "S$ " + parseInt(parseFloat(reply_data['carPrice'][0]['carprice']) * 0.042).toLocaleString();
             self.getLoanDetails(self.prepMoneySmartURL());
           }
         });
@@ -90,14 +174,17 @@
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send(data);
       },
-      getLoanDetails: function(url) {
+      getLoanDetails: function (url) {
         let data = JSON.stringify(false);
         let xhr = new XMLHttpRequest();
+        let self = this;
         // xhr.withCredentials = true;
 
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === this.DONE) {
             let loan_info = console.log(this.responseText);
+            self.show_bank_details = true;
+            self.$refs.bank_details_slider.reSlick();
           }
         });
 
@@ -128,15 +215,45 @@
           this.selected_model = carModel;
         }
       },
-      prepMoneySmartURL: function() {
+      prepMoneySmartURL: function () {
         let amount = this.calculatedPrice;
         amount = amount.replace('S$ ', '').toLocaleString().replace(/,/g, '%2C');
         return 'https://cors-anywhere.herokuapp.com/' + "https://www.moneysmart.sg/ajax/singlewiz/getSingleWizTableData?channel=car-loan&channelSlug=car-loan&page=1&sort=&order=&limit=5&filters%5Bloan_amount%5D=" + amount + "&filters%5Bloan_tenure_unit%5D=years&filters%5Bloan_tenure%5D=5";
+      },
+      printSelectedBank: function() {
+        // console.log(this.selectedBank);
+        console.log($(this.$refs.bank_details_slider))
+      },
+      handleAfterChangeBank(event, slick, currentSlide) {
+        this.selectedBank = currentSlide;
+      },
+      updateCarousel: function() {
+        let instance = M.Carousel.getInstance(this.$refs.car_images);
+        let brand_index = Object.keys(this.model_table).findIndex(x => x === this.selected_brand);
+        let model_index = Object.keys(this.model_table[this.selected_brand]).findIndex(x => x === this.selected_model);
+        let slide_index = (brand_index - 1) * 2 + model_index;
+        instance.set(slide_index);
       }
     },
+    // computed: {
+    //   selectedBank: function() {
+    //     $(this).index($(this.$refs.bank_details_slider).slick.$slides);
+    //   }
+    // },
     mounted() {
-      $(this.$refs.car_images).carousel();
       this.getCarList();
+      let self = this;
+      $(this.$refs.car_images).carousel({
+        onCycleTo: function(ele, dragge) {
+          let idx = $(ele).index();
+          let brand_index = Math.floor(idx/2);
+          let model_index = idx % 2;
+          if (Object.keys(self.model_table).length) {
+            self.selected_brand = Object.keys(self.model_table)[brand_index];
+            self.selected_model = Object.keys(Object.values(self.model_table)[brand_index])[model_index];
+          }
+        }
+      });
     }
   }
 
@@ -170,7 +287,7 @@
     text-align: right;
   }
 
-  #get_price_btn {
+  .color_btn {
     font-family: 'Helvetica Rounded';
     text-transform: none;
     font-weight: bold;
@@ -188,5 +305,23 @@
   #car_price {
     text-align: left;
   }
+
+  #bank_details_container {
+    height: 50%;
+  }
+
+  .slick-slide.slick-current.slick-active > div > div.card{
+    border: 4px #FF39E5 solid;
+  }
+
+  .card-content > p {
+    font-family: 'Helvetica Rounded';
+    font-weight: bold;
+  }
+
+  .slick-slide.slick-current.slick-active > div > div.card > .card-content {
+    color: #FF39E5;
+  }
+
 
 </style>

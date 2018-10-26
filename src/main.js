@@ -8,9 +8,11 @@ import 'materialize-css/dist/css/materialize.css'
 import AsyncComputed from 'vue-async-computed'
 import 'babel-polyfill'
 import * as VueGoogleMaps from "vue2-google-maps"
+import VueGoogleCharts from 'vue-google-charts'
 
 Vue.use(VueResource);
 Vue.use(AsyncComputed);
+Vue.use(VueGoogleCharts);
 
 //Custom directives
 //Global directives

@@ -54,6 +54,10 @@
     font-weight: bold;
     font-size: 2.25rem;
   }
+
+  #stages li.active{
+    color: #FF39E5;
+  }
   #stages ul > li:before {
     content: "•";
     font-size: 10rem;
