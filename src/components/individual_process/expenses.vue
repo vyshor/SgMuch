@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!--The only workaround http and https api problem-->
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <progressbar v-bind:currentState="currentState"></progressbar>
