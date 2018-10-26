@@ -3,7 +3,7 @@
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <progressbar v-bind:currentState="currentState"></progressbar>
-    <nextbar v-bind:info="{currentState, path}"></nextbar>
+    <nextbar v-bind:info="{currentState, path, plan_id}"></nextbar>
     <div id="dashboard_main">
       <div id="price_car">
         <div id="car_images_container" class="center carousel" ref="car_images">
@@ -92,6 +92,7 @@
 </template>
 
 <script>
+  import firebase from 'firebase';
   import logo_dashboard from "../dashboard/logo_dashboard";
   import navbar_dashboard from "../dashboard/navbar_dashboard";
   import progressbar from "../dashboard/progressbar";
@@ -111,6 +112,8 @@
     },
     data() {
       return {
+        user_id: firebase.auth().currentUser.uid,
+        plan_id: this.$route.params.plan_id,
         currentState: "car",
         path: ['/dashboard/expenses', '/dashboard/housing', '/dashboard/expenses'],
         car_list: [],

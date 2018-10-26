@@ -3,7 +3,7 @@
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <progressbar v-bind:currentState="currentState"></progressbar>
-    <nextbar v-bind:info="{currentState, path}"></nextbar>
+    <nextbar v-bind:info="{currentState, path, plan_id}"></nextbar>
     <div id="dashboard_main">
       <div id="entry_area">
         <form id="activity_info" class="center row">
@@ -180,7 +180,7 @@
             this.preloaded_estimated_data.push(data);
           }
         }
-        console.log("preload completed");
+        // console.log("preload completed");
       }
     },
     mounted() {

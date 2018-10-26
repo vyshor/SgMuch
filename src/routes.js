@@ -49,7 +49,7 @@ let router = new Router({
       }
     },
     {
-      path: '/dashboard/income',
+      path: '/dashboard/income/:plan_id',
       name: 'Income',
       component: income,
       meta: {
@@ -57,7 +57,7 @@ let router = new Router({
       }
     },
     {
-      path: '/dashboard/housing',
+      path: '/dashboard/housing/:plan_id',
       name: 'Housing',
       component: housing,
       meta: {
@@ -65,7 +65,7 @@ let router = new Router({
       }
     },
     {
-      path: '/dashboard/car',
+      path: '/dashboard/car/:plan_id',
       name: 'Car',
       component: car,
       meta: {

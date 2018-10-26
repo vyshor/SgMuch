@@ -3,7 +3,7 @@
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <progressbar v-bind:currentState="currentState"></progressbar>
-    <nextbar v-bind:info="{currentState, path}"></nextbar>
+    <nextbar v-bind:info="{currentState, path, plan_id}"></nextbar>
     <div class="row" id="dashboard_main">
       <div id="google_map_container" class="col l5 push-l1">
         <GoogleMap></GoogleMap>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+  import firebase from 'firebase';
   import logo_dashboard from "../dashboard/logo_dashboard";
   import navbar_dashboard from "../dashboard/navbar_dashboard";
   import progressbar from "../dashboard/progressbar";
@@ -45,6 +46,8 @@
     },
     data() {
       return {
+        user_id: firebase.auth().currentUser.uid,
+        plan_id: this.$route.params.plan_id,
         currentState: "housing",
         uni_checked: false,
         monthly_income: 0,

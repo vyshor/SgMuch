@@ -18,7 +18,8 @@
     props: {
       info: {
         currentState: 'currentState',
-        path: 'path'
+        path: 'path',
+        plan_id: 'plan_id'
       }
     },
     computed: {
@@ -35,13 +36,13 @@
         return this.info.currentState === "expenses"
       },
       leftPath: function () {
-        if (this.info.path[1] !== "invalid") return this.info.path[1]; else return false;
+        if (this.info.path[1] !== "invalid") return this.info.path[1] + '/'+ this.info.plan_id; else return '';
       },
       rightPath: function () {
-        if (this.info.path[0] !== "invalid") return this.info.path[0]; else return false;
+        if (this.info.path[0] !== "invalid") return this.info.path[0] + '/'+ this.info.plan_id; else return '';
       },
       skipPath: function () {
-        if (this.info.path[2] !== "invalid") return this.info.path[2]; else return false;
+        if (this.info.path[2] !== "invalid") return this.info.path[2] + '/'+ this.info.plan_id; else return '';
       }
     }
   }
