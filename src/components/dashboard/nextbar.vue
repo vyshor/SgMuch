@@ -6,7 +6,7 @@
     <router-link v-bind:to="skipPath" v-bind:class="{ disabled : !(skipPath) }">
       <a class="col l2 push-l7 btn btn-large" v-if="!(incomeActive)">Skip</a>
     </router-link>
-    <router-link v-bind:to="rightPath" v-bind:class="{ disabled : !(rightPath) }">
+    <router-link v-bind:to="rightPath" v-bind:class="{ disabled : !(rightPath)}">
     <i class="material-icons col l1 push-l10 large" id="right_arrow" v-if="incomeActive">arrow_forward</i>
     <i class="material-icons col l1 push-l8 large" id="right_arrow" v-else>arrow_forward</i>
     </router-link>
@@ -19,7 +19,8 @@
       info: {
         currentState: 'currentState',
         path: 'path',
-        plan_id: 'plan_id'
+        plan_id: 'plan_id',
+        currentStatus: 'currentStatus'
       }
     },
     computed: {
@@ -39,7 +40,7 @@
         if (this.info.path[1] !== "invalid") return this.info.path[1] + '/'+ this.info.plan_id; else return '';
       },
       rightPath: function () {
-        if (this.info.path[0] !== "invalid") return this.info.path[0] + '/'+ this.info.plan_id; else return '';
+        if (this.info.path[0] !== "invalid" && (this.info.currentStatus)) return this.info.path[0] + '/'+ this.info.plan_id; else return '';
       },
       skipPath: function () {
         if (this.info.path[2] !== "invalid") return this.info.path[2] + '/'+ this.info.plan_id; else return '';
@@ -71,6 +72,10 @@
     color: #272A43;
     background-color: #FF39E5;
     margin-top: 1%;
+  }
+
+  .disabled > #right_arrow {
+    color: #BFB2BF;
   }
 </style>
 

@@ -3,7 +3,7 @@
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <progressbar v-bind:currentState="currentState"></progressbar>
-    <nextbar v-bind:info="{currentState, path, plan_id}"></nextbar>
+    <nextbar v-bind:info="{currentState, path, plan_id, currentStatus}"></nextbar>
     <div class="row" id="dashboard_main">
       <div id="monthly_income_container" class="col l5 push-l1">
         <div v-if="!(uni_checked)">
@@ -18,7 +18,7 @@
                          id="monthly_income_field" step="0.01"/>
                 </div>
                 <!--<label for="monthly_income"></label>-->
-                <input class="btn" type="Submit" value="Calculate" v-on:click="" id="calculate_btn"></input>
+                <input class="btn" type="Submit" value="Calculate" v-on:click="calculateIncome" id="calculate_btn"></input>
               </div>
             </form>
           </div>
@@ -54,15 +54,15 @@
       <div id="income_info" class="col l4 push-l2">
         <div class="row">
           <p class="col l6 info_text">Annual Income:</p>
-          <p class="col l6" id="annual_income"></p>
+          <p class="col l6" id="annual_income">S$ {{ annual_income }}</p>
         </div>
         <div class="row">
           <p class="col l6 info_text">Income Tax:</p>
-          <p class="col l6" id="income_tax"></p>
+          <p class="col l6" id="income_tax">S$ {{ income_tax }}</p>
         </div>
         <div class="row">
           <p class="col l6 info_text">Net Income:</p>
-          <p class="col l6" id="net_income"></p>
+          <p class="col l6" id="net_income">S$ {{ net_income }}</p>
         </div>
       </div>
     </div>
@@ -75,6 +75,7 @@
   import navbar_dashboard from "../dashboard/navbar_dashboard";
   import progressbar from "../dashboard/progressbar";
   import nextbar from "../dashboard/nextbar";
+  import processFireBase from "../../mixins/processFireBase";
 
   let GITRAW = "https://raw.githubusercontent.com/vyshor/university_expense/master/";
 
@@ -85,16 +86,22 @@
       'progressbar': progressbar,
       'nextbar': nextbar
     },
+    mixins: [processFireBase],
+
     data() {
       return {
         user_id: firebase.auth().currentUser.uid,
         plan_id: this.$route.params.plan_id,
         currentState: "income",
+        currentStatus: 0,
         uni_checked: false,
         monthly_income: 0,
         uni_selected: 'NUS',
         course_selected: 'Architecture',
-        path: ['/dashboard/housing', 'invalid', 'invalid']
+        path: ['/dashboard/housing', 'invalid', 'invalid'],
+        annual_income: '',
+        income_tax: '',
+        net_income: ''
       }
     },
     methods: {
@@ -115,16 +122,25 @@
               });
             }
           });
+        } else {
+          this.calculateIncome(); // auto calculates and save their income once they untick checkbox
         }
       },
       getSalary: function (uni_selected) {
         return Promise.resolve($.ajax(GITRAW + "Python/uni/" + uni_selected + "_cost_salary.json", {
           async: true
         }))
+      },
+      calculateIncome: function(e = null) {
+        if (e !== null) e.preventDefault();
+        // function that takes the monthly income and returns annual income, income tax, and net income
+        this.currentStatus = 2; // cus status = saved
+        this.postToFireBase(this.user_id, this.plan_id, this.currentState, this.income_data, this.currentStatus);
       }
     },
     asyncComputed: {
       async estimated_income() {
+        if (!this.uni_checked) return "";
         let selected_course = this.course_selected;
         const selected_uni = this.uni_selected;
         const data = await this.getSalary(selected_uni);
@@ -140,9 +156,25 @@
               this.course_selected = 'Accountancy';
           }
         }
-        const estimated_salary = '' + cost_salary[selected_course]["median_salary"];
+        const estimated_salary = cost_salary[selected_course]["median_salary"];
+        this.monthly_income = estimated_salary;
+        this.calculateIncome();
         return "S$ " + parseInt(estimated_salary).toLocaleString();
       }
+    },
+    computed: {
+      income_data: function () {
+        return {
+          monthlyIncome: parseInt(this.monthly_income),
+          annualIncome: this.annual_income,
+          incomeTax: this.income_tax,
+          netIncome: this.net_income,
+          estimatedBool: this.uni_checked,
+          university: this.uni_selected,
+          course: this.course_selected
+        }
+      }
+
     }
   }
 

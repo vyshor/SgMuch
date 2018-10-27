@@ -3,7 +3,7 @@
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <progressbar v-bind:currentState="currentState"></progressbar>
-    <nextbar v-bind:info="{currentState, path, plan_id}"></nextbar>
+    <nextbar v-bind:info="{currentState, path, plan_id, currentStatus}"></nextbar>
     <div id="dashboard_main">
       <div id="entry_area">
         <form id="activity_info" class="center row">
@@ -98,6 +98,7 @@
         user_id: firebase.auth().currentUser.uid,
         plan_id: this.$route.params.plan_id,
         currentState: "expenses",
+        currentStatus: 0,
         path: ['/dashboard/viewplan', '/dashboard/car', '/dashboard/viewplan'],
         activity: '',
         amount: '',

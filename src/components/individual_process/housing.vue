@@ -3,7 +3,7 @@
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <progressbar v-bind:currentState="currentState"></progressbar>
-    <nextbar v-bind:info="{currentState, path, plan_id}"></nextbar>
+    <nextbar v-bind:info="{currentState, path, plan_id, currentStatus}"></nextbar>
     <div class="row" id="dashboard_main">
       <div id="google_map_container" class="col l5 push-l1">
         <GoogleMap></GoogleMap>
@@ -49,6 +49,7 @@
         user_id: firebase.auth().currentUser.uid,
         plan_id: this.$route.params.plan_id,
         currentState: "housing",
+        currentStatus: 0,
         uni_checked: false,
         monthly_income: 0,
         uni_selected: 'NUS',

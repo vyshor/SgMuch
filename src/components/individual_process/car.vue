@@ -3,7 +3,7 @@
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <progressbar v-bind:currentState="currentState"></progressbar>
-    <nextbar v-bind:info="{currentState, path, plan_id}"></nextbar>
+    <nextbar v-bind:info="{currentState, path, plan_id, currentStatus}"></nextbar>
     <div id="dashboard_main">
       <div id="price_car">
         <div id="car_images_container" class="center carousel" ref="car_images">
@@ -115,6 +115,7 @@
         user_id: firebase.auth().currentUser.uid,
         plan_id: this.$route.params.plan_id,
         currentState: "car",
+        currentStatus: 0,
         path: ['/dashboard/expenses', '/dashboard/housing', '/dashboard/expenses'],
         car_list: [],
         selected_brand: '',
@@ -124,6 +125,7 @@
         calculatedPrice: '',
         show_bank_details: false,
         selectedBank: 0,
+        tenure: 5,
         slickOptions: {
           centerMode: true,
           centerPadding: '60px',
@@ -221,7 +223,8 @@
       prepMoneySmartURL: function () {
         let amount = this.calculatedPrice;
         amount = amount.replace('S$ ', '').toLocaleString().replace(/,/g, '%2C');
-        return 'https://cors-anywhere.herokuapp.com/' + "https://www.moneysmart.sg/ajax/singlewiz/getSingleWizTableData?channel=car-loan&channelSlug=car-loan&page=1&sort=&order=&limit=5&filters%5Bloan_amount%5D=" + amount + "&filters%5Bloan_tenure_unit%5D=years&filters%5Bloan_tenure%5D=5";
+        return "https://www.moneysmart.sg/ajax/singlewiz/getSingleWizTableData?channel=car-loan&channelSlug=car-loan&page=1&sort=&order=&limit=5&filters%5Bloan_amount%5D=" + amount + "&filters%5Bloan_tenure_unit%5D=years&filters%5Bloan_tenure%5D=5";
+        // 'https://cors-anywhere.herokuapp.com/' +
       },
       printSelectedBank: function() {
         // console.log(this.selectedBank);
