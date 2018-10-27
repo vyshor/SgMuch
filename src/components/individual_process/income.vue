@@ -134,8 +134,7 @@
       calculateIncome: function(e = null) {
         if (e !== null) e.preventDefault();
         // function that takes the monthly income and returns annual income, income tax, and net income
-        this.currentStatus = 2; // cus status = saved
-        this.postToFireBase(this.user_id, this.plan_id, this.currentState, this.income_data, this.currentStatus);
+        this.saveToFireBase();
       }
     },
     asyncComputed: {
@@ -163,7 +162,7 @@
       }
     },
     computed: {
-      income_data: function () {
+      saved_data: function () {
         return {
           monthlyIncome: parseInt(this.monthly_income),
           annualIncome: this.annual_income,

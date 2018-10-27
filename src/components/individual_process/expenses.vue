@@ -10,13 +10,15 @@
           <div class="row">
             <p class="col l4 info_text">Activity:</p>
             <div class="input-field col l6">
-              <input v-model="activity" type="text" name="amount" id="activity_field" class="validate" aria-required="true"/>
+              <input v-model="activity" type="text" name="amount" id="activity_field" class="validate"
+                     aria-required="true"/>
             </div>
           </div>
           <div class="row">
             <p class="col l4 info_text">Amount:</p>
             <div class="input-field col l6">
-              <input v-model="amount" type="number" name="amount" id="amount_field" class="validate" step="0.01" aria-required="true"/>
+              <input v-model="amount" type="number" name="amount" id="amount_field" class="validate" step="0.01"
+                     aria-required="true"/>
               <label for="amount_field">S$</label>
             </div>
           </div>
@@ -36,7 +38,8 @@
           </div>
         </form>
         <div class="container center">
-          <button class="btn color_btn" type="Submit" v-on:click="estimateExpense" id="estimate_btn"><i class="large material-icons">add_shopping_cart</i>Estimate
+          <button class="btn color_btn" type="Submit" v-on:click="estimateExpense" id="estimate_btn"><i
+            class="large material-icons">add_shopping_cart</i>Estimate
             based on income
           </button>
         </div>
@@ -63,10 +66,12 @@
           </table>
         </div>
         <div class="col l5" id="pie_container">
+          <p class="center">Monthly Expenses Breakdown</p>
           <GChart
             type="PieChart"
             :data="getChartData"
             :options="chartOptions"
+            class="center"
           />
         </div>
       </div>
@@ -83,6 +88,7 @@
   import nextbar from "../dashboard/nextbar";
   import {GChart} from 'vue-google-charts';
   import formatPieData from '../../mixins/formatPieData'
+  import processFireBase from "../../mixins/processFireBase";
 
   export default {
     components: {
@@ -92,7 +98,7 @@
       'nextbar': nextbar,
       GChart
     },
-    mixins: [formatPieData],
+    mixins: [formatPieData, processFireBase],
     data() {
       return {
         user_id: firebase.auth().currentUser.uid,
@@ -112,7 +118,7 @@
         chartOptions: {
           chart: {
             title: 'Monthly Expenses Breakdown',
-            backgroundColor: { fill:'transparent' }
+            backgroundColor: {fill: 'transparent'}
           }
         }
       }
@@ -120,22 +126,27 @@
     },
     methods: {
       deleteEntry(idx) {
-        this.table_data.splice(idx, 1)
+        this.table_data.splice(idx, 1);
+        this.saveToFireBase();
       },
       addEntry(e) {
         e.preventDefault();
         this.table_data.push({
           activity: this.activity,
           amount: this.amount,
-          frequency: this.frequency});
+          frequency: this.frequency
+        });
+        this.saveToFireBase();
 
         this.activity = '';
         this.amount = '';
         this.frequency = 'daily';
       },
       estimateExpense() {
-        if (this.preloaded_estimated_data.length)
-        this.table_data = this.table_data.concat(this.preloaded_estimated_data);
+        if (this.preloaded_estimated_data.length) {
+          this.table_data = this.table_data.concat(this.preloaded_estimated_data);
+          this.saveToFireBase();
+        }
       },
       preloadEstimateExpense() {
         let data = JSON.stringify(false);
@@ -188,6 +199,11 @@
       this.preloadEstimateExpense();
       console.log(this.plan_id);
       console.log(this.user_id);
+    },
+    computed: {
+      saved_data: function () {
+        return this.table_data;
+      }
     }
   }
 
@@ -286,6 +302,13 @@
   thead > tr > th {
     border: 1px #000 solid;
     color: #fff;
+  }
+
+  #pie_container p {
+    font-family: 'Helvetica Rounded';
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin: 0;
   }
 
 </style>

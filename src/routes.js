@@ -11,6 +11,8 @@ import income from './components/individual_process/income.vue'
 import housing from './components/individual_process/housing.vue'
 import car from './components/individual_process/car.vue'
 import expenses from './components/individual_process/expenses.vue'
+import profile from './components/profile/profile.vue'
+import viewplan from './components/dashboard/viewplan.vue'
 
 Vue.use(Router);
 
@@ -76,6 +78,22 @@ let router = new Router({
       path: '/dashboard/expenses/:plan_id',
       name: 'Expenses',
       component: expenses,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/dashboard/viewplan/:plan_id',
+      name: 'ViewPlan',
+      component: viewplan,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: profile,
       meta: {
         requiresAuth: true
       }

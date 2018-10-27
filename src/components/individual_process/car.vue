@@ -26,22 +26,24 @@
           <div class="row">
             <p class="col l4 info_text">Model:</p>
             <div class="input-field browser-default col l6">
-              <select name="model" class="browser-default" id="car_model" v-model="selected_model" v-on:change="updateCarousel">
+              <select name="model" class="browser-default" id="car_model" v-model="selected_model"
+                      v-on:change="updateCarousel">
                 <option v-for="carModel in model_list" :value="carModel.carModel">{{ carModel.carModel }}</option>
               </select>
             </div>
           </div>
           <div class="row">
             <p class="col l4 info_text">Price:</p>
-            <p class="col l6" id="car_price">{{ calculatedPrice }}</p>
+            <p class="col l6" id="car_price">S$ {{ calculatedPrice.toLocaleString() }}</p>
           </div>
           <div class="row">
-            <input class="btn color_btn" type="Submit" value="Calculate" v-on:click="getPrice" id="get_price_btn"></input>
+            <input class="btn color_btn" type="Submit" value="Calculate" v-on:click="getPrice"
+                   id="get_price_btn"></input>
           </div>
         </form>
       </div>
       <div id="bank_details_container" v-show="show_bank_details" class="container center">
-      <!--<div id="bank_details_container" class="container center">-->
+        <!--<div id="bank_details_container" class="container center">-->
         <slick class="" ref="bank_details_slider" :options="slickOptions" @afterChange="handleAfterChangeBank">
           <div class="card" href="#one!">
             <div class="card-content">
@@ -50,7 +52,8 @@
                 I am convenient because I require little markup to use effectively.</p>
             </div>
             <div class="card-action" id="bank_details_0">
-              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank" v-bind:class="{disabled: selectedBank !== 0}">Save Plan</a>
+              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank"
+                 v-bind:class="{disabled: selectedBank !== 0}">Save Plan</a>
             </div>
           </div>
           <div class="card" href="#one!">
@@ -59,8 +62,9 @@
               <p>I am a very simple card. I am good at containing small bits of information.
                 I am convenient because I require little markup to use effectively.</p>
             </div>
-            <div class="card-action" >
-              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank" v-bind:class="{disabled: selectedBank !== 1}">Save Plan</a>
+            <div class="card-action">
+              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank"
+                 v-bind:class="{disabled: selectedBank !== 1}">Save Plan</a>
             </div>
           </div>
           <div class="card" href="#one!">
@@ -69,8 +73,9 @@
               <p>I am a very simple card. I am good at containing small bits of information.
                 I am convenient because I require little markup to use effectively.</p>
             </div>
-            <div class="card-action"  >
-              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank" v-bind:class="{disabled: selectedBank !== 2}">Save Plan</a>
+            <div class="card-action">
+              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank"
+                 v-bind:class="{disabled: selectedBank !== 2}">Save Plan</a>
             </div>
           </div>
           <div class="card" href="#one!">
@@ -79,8 +84,9 @@
               <p>I am a very simple card. I am good at containing small bits of information.
                 I am convenient because I require little markup to use effectively.</p>
             </div>
-            <div class="card-action"  >
-              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank" v-bind:class="{disabled: selectedBank !== 3}">Save Plan</a>
+            <div class="card-action">
+              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank"
+                 v-bind:class="{disabled: selectedBank !== 3}">Save Plan</a>
             </div>
           </div>
 
@@ -101,6 +107,7 @@
   import 'slick-carousel/slick/slick.css';
   import 'slick-carousel/slick/slick-theme.css';
   import * as M from "materialize-css";
+  import processFireBase from "../../mixins/processFireBase";
 
   export default {
     components: {
@@ -110,6 +117,7 @@
       'nextbar': nextbar,
       Slick
     },
+    mixins: [processFireBase],
     data() {
       return {
         user_id: firebase.auth().currentUser.uid,
@@ -124,7 +132,10 @@
         selected_model: '',
         calculatedPrice: '',
         show_bank_details: false,
+        saved_bank_details: false,
         selectedBank: 0,
+        interest_rate: 0,
+        monthly_repay: 0,
         tenure: 5,
         slickOptions: {
           centerMode: true,
@@ -170,7 +181,8 @@
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === this.DONE) {
             let reply_data = JSON.parse(this.responseText);
-            self.calculatedPrice = "S$ " + parseInt(parseFloat(reply_data['carPrice'][0]['carprice']) * 0.042).toLocaleString();
+            self.calculatedPrice = parseInt(parseFloat(reply_data['carPrice'][0]['carprice']) * 0.042);
+            self.saveToFireBase();
             self.getLoanDetails(self.prepMoneySmartURL());
           }
         });
@@ -222,37 +234,35 @@
       },
       prepMoneySmartURL: function () {
         let amount = this.calculatedPrice;
-        amount = amount.replace('S$ ', '').toLocaleString().replace(/,/g, '%2C');
-        return "https://www.moneysmart.sg/ajax/singlewiz/getSingleWizTableData?channel=car-loan&channelSlug=car-loan&page=1&sort=&order=&limit=5&filters%5Bloan_amount%5D=" + amount + "&filters%5Bloan_tenure_unit%5D=years&filters%5Bloan_tenure%5D=5";
-        // 'https://cors-anywhere.herokuapp.com/' +
+        amount = amount.toLocaleString().replace(/,/g, '%2C');
+        return 'https://cors-anywhere.herokuapp.com/' + "https://www.moneysmart.sg/ajax/singlewiz/getSingleWizTableData?channel=car-loan&channelSlug=car-loan&page=1&sort=&order=&limit=5&filters%5Bloan_amount%5D=" + amount + "&filters%5Bloan_tenure_unit%5D=years&filters%5Bloan_tenure%5D=5";
       },
-      printSelectedBank: function() {
+      printSelectedBank: function () {
         // console.log(this.selectedBank);
         console.log($(this.$refs.bank_details_slider))
+        // Save all bank details into the variables
+        // Then save into firebase
+        this.saveToFireBase();
       },
       handleAfterChangeBank(event, slick, currentSlide) {
         this.selectedBank = currentSlide;
       },
-      updateCarousel: function() {
+      updateCarousel: function () {
         let instance = M.Carousel.getInstance(this.$refs.car_images);
         let brand_index = Object.keys(this.model_table).findIndex(x => x === this.selected_brand);
         let model_index = Object.keys(this.model_table[this.selected_brand]).findIndex(x => x === this.selected_model);
         let slide_index = (brand_index - 1) * 2 + model_index;
         instance.set(slide_index);
       }
-    },
-    // computed: {
-    //   selectedBank: function() {
-    //     $(this).index($(this.$refs.bank_details_slider).slick.$slides);
-    //   }
-    // },
+    }
+    ,
     mounted() {
       this.getCarList();
       let self = this;
       $(this.$refs.car_images).carousel({
-        onCycleTo: function(ele, dragge) {
+        onCycleTo: function (ele, dragge) {
           let idx = $(ele).index();
-          let brand_index = Math.floor(idx/2);
+          let brand_index = Math.floor(idx / 2);
           let model_index = idx % 2;
           if (Object.keys(self.model_table).length) {
             self.selected_brand = Object.keys(self.model_table)[brand_index];
@@ -260,6 +270,20 @@
           }
         }
       });
+    },
+    computed: {
+      saved_data: function () {
+        return {
+          brand: this.selected_brand,
+          model: this.selected_model,
+          price: this.calculatedPrice,
+          loanBool: this.saved_bank_details,
+          interestRate: this.interest_rate,
+          monthlyRepay: this.monthly_repay,
+          tenure: this.tenure
+        }
+      }
+
     }
   }
 
@@ -316,7 +340,7 @@
     height: 50%;
   }
 
-  .slick-slide.slick-current.slick-active > div > div.card{
+  .slick-slide.slick-current.slick-active > div > div.card {
     border: 4px #FF39E5 solid;
   }
 

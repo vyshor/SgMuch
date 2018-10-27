@@ -64,6 +64,7 @@
 <script>
   import firebase from 'firebase';
   import image from "../../assets/logo.png";
+  import SHA256 from "crypto-js/sha256";
 
   export default {
     name: "signUp",
@@ -112,7 +113,7 @@
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
           (user) => {
             this.$router.replace('dashboard');
-            console.log(user.user.uid);
+            // console.log(user.user.uid);
 
             const uid = user.user.uid;
             const name = this.name;
@@ -125,7 +126,6 @@
           }
         )
       },
-
       post: function (uid, name, email, password) {
         var db = firebase.firestore();
 
@@ -134,7 +134,7 @@
         });
 
         // Initialise the user info
-        db.collection('users').doc('' + uid).set({name:name, email:email, password: password, planCount: 0});
+        db.collection('users').doc('' + uid).set({name:name, email:email, password: SHA256(password).toString(), planCount: 0});
       }
 
     }

@@ -33,6 +33,7 @@
   import progressbar from "../dashboard/progressbar";
   import nextbar from "../dashboard/nextbar";
   import GoogleMap from "../GoogleMap";
+  import processFireBase from "../../mixins/processFireBase";
 
   let GITRAW = "https://raw.githubusercontent.com/vyshor/university_expense/master/";
 
@@ -44,6 +45,7 @@
       'progressbar': progressbar,
       'nextbar': nextbar
     },
+    mixins: [processFireBase],
     data() {
       return {
         user_id: firebase.auth().currentUser.uid,
