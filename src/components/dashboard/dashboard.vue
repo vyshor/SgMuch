@@ -3,11 +3,11 @@
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <flex class="row" id="dashboard_main">
-      <flex column noWrap id="plan_details" class="col l9">
+      <div id="plan_details" class="col l9">
         <div class="center row">
           <a class="btn btn-large" id="start_new_plan" v-on:click="startNewPlan">Start new plan</a>
         </div>
-      </flex>
+      </div>
       <flex column class="col l3 flex_box_el" id="sidebar_container">
       <sidebar_dashboard v-bind:info="{planInfo, planCount, activePlanId}" @deletePlan="deletePlan"></sidebar_dashboard>
       </flex>

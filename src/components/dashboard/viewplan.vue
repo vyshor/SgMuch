@@ -4,10 +4,10 @@
     <navbar_dashboard></navbar_dashboard>
     <a class="btn btn-large" id="start_new_plan" v-on:click="startNewPlan">Start new plan</a>
     <flex class="row" id="dashboard_main">
-      <flex column id="loading_screen" class="col l9 flexbox_el" v-if="!doneLoading">
+      <div id="loading_screen" class="col l9 flexbox_el" v-if="!doneLoading">
         Loading
-      </flex>
-      <flex column noWrap id="plan_details" class="col l9 flexbox_el" v-else>
+      </div>
+      <div id="plan_details" class="col l9 flexbox_el" v-else>
         <p class="center" id="plan_name">{{ activePlanDetails.planName }}</p>
         <div class="display_box row center">
           <p class="col l12 process_title">Income</p>
@@ -78,7 +78,7 @@
             <router-link v-bind:to="'/dashboard/expenses/' + activePlanId" class="edit_btn right">Edit</router-link>
           </div>
         </div>
-      </flex>
+      </div>
       <flex column class="col l3 flex_box_el" id="sidebar_container">
       <sidebar_dashboard v-bind:info="{planInfo, planCount}" :activePlanId.sync="activePlanId" @deletePlan="deletePlan"></sidebar_dashboard>
       </flex>
