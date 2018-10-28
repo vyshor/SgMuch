@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: './src/main.js',
@@ -7,6 +8,9 @@ module.exports = {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
     filename: 'build.js'
+  },
+  node: {
+    fs: "empty"
   },
   module: {
     rules: [
@@ -16,21 +20,37 @@ module.exports = {
           'vue-style-loader',
           'css-loader'
         ],
-      },      {
+      }, {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          loaders: {
-          },
+          loaders: {},
           limit: 10000
           // other vue-loader options go here
         }
       },
+      // {
+      //   test: /\.es6$/,
+      //   exclude: /node_modules/,
+      //   loader: 'babel',
+      //   query: {
+      //     presets: ['es2015']
+      //   }
+      // },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        // exclude: /node_modules/,
+        query: {
+          presets: ["@babel/env"]
+        }
       },
+      // {
+      //   test: /\.js$/,
+      //   exclude: '/node_modules/',
+      //   loader: 'babel',
+      //   query: {presets: ['es2015']},
+      // },
       {
         test: /\.(png|jpg|gif|svg)$/,
         loader: 'file-loader',
@@ -79,7 +99,15 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"production"'
       }
     }),
+    // new UglifyJsPlugin({
+    //   uglifyOptions: {
+    //     ecma: 8
+    //   }
+    // }),
     new webpack.optimize.UglifyJsPlugin({
+      // uglifyOptions: {
+      //   ecma: 8
+      // },
       sourceMap: true,
       compress: {
         warnings: false

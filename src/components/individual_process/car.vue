@@ -6,10 +6,9 @@
     <nextbar v-bind:info="{currentState, path, plan_id, currentStatus}"></nextbar>
     <div id="dashboard_main">
       <div id="price_car">
-        <div id="car_images_container" class="center carousel" ref="car_images" v-for="(value, brandName) in model_table">
-          <div v-for="(ccData, modelName) in value">
-            <a class="carousel-item" href=""><img v-bind:src="'../../assets/ImagesFolder/' + brandName + '/' + modelName + '.jpg'"></a>
-          </div>
+        <!--<img src="../../assets/ImagesFolder/BMW/bmw-1-series.jpg">-->
+        <div id="car_images_container" class="center carousel" ref="car_images">
+            <a class="carousel-item" href="" v-for="(url, idx) of allmodelurl_list"><img v-bind:src="url"></a>
           <!--<a class="carousel-item" href="#two!"><img src="https://lorempixel.com/250/250/nature/2"></a>-->
           <!--<a class="carousel-item" href="#three!"><img src="https://lorempixel.com/250/250/nature/3"></a>-->
           <!--<a class="carousel-item" href="#four!"><img src="https://lorempixel.com/250/250/nature/4"></a>-->
@@ -130,6 +129,7 @@
         car_list: [],
         selected_brand: '',
         model_table: {},
+        allmodelurl_list: [],
         model_list: [],
         selected_model: '',
         calculatedPrice: '',
@@ -222,7 +222,11 @@
             // self.model_table = data;
             for (let [key, value] of Object.entries(data)) {
               self.model_table = Object.assign({}, self.model_table, {[key]: value});
+              for (let [modelName, ccData] of Object.entries(value)) {
+                self.allmodelurl_list.push('../../src/assets/ImagesFolder/' + key + '/' + modelName + '.jpg');
+              }
             }
+            console.log(self.allmodelurl_list);
             self.selected_brand = 'BMW';
             self.updateModelDropdown();
           }
@@ -258,6 +262,11 @@
         let model_index = Object.keys(this.model_table[this.selected_brand]).findIndex(x => x === this.selected_model);
         let slide_index = (brand_index - 1) * 2 + model_index;
         instance.set(slide_index);
+      },
+      getImgUrl: function(url) {
+        // let images = requireContext('url', false, /\.jpg$/);
+        // return images('./' + url + ".jpg");
+        return url + '.jpg'
       }
     }
     ,
