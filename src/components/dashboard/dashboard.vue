@@ -2,16 +2,16 @@
   <div>
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
-    <flex-row class="row" id="dashboard_main">
-      <flex-col id="plan_details" class="col l9">
+    <flex class="row" id="dashboard_main">
+      <flex column noWrap id="plan_details" class="col l9">
         <div class="center row">
           <a class="btn btn-large" id="start_new_plan" v-on:click="startNewPlan">Start new plan</a>
         </div>
-      </flex-col>
-      <flex-col class="col l3 flex_box_el" id="sidebar_container">
+      </flex>
+      <flex column class="col l3 flex_box_el" id="sidebar_container">
       <sidebar_dashboard v-bind:info="{planInfo, planCount, activePlanId}" @deletePlan="deletePlan"></sidebar_dashboard>
-      </flex-col>
-    </flex-row>
+      </flex>
+    </flex>
   </div>
 </template>
 
@@ -25,9 +25,11 @@
   import dashboardPlansMethods from "../../mixins/dashboardPlansMethods";
   import FlexRow from "vue-flex/lib/components/FlexRow";
   import FlexCol from "vue-flex/lib/components/FlexCol";
+  import Flex from "vue-flex/lib/components/Flex";
 
   export default {
     components: {
+      Flex,
       FlexRow,
       FlexCol,
       'logo_dashboard': logo_dashboard,

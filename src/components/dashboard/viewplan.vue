@@ -7,7 +7,7 @@
       <flex column id="loading_screen" class="col l9 flexbox_el" v-if="!doneLoading">
         Loading
       </flex>
-      <flex column id="plan_details" class="col l9 flexbox_el" v-else>
+      <flex column noWrap id="plan_details" class="col l9 flexbox_el" v-else>
         <p class="center" id="plan_name">{{ activePlanDetails.planName }}</p>
         <div class="display_box row center">
           <p class="col l12 process_title">Income</p>
