@@ -47,51 +47,22 @@
           </div>
         </form>
       </div>
-      <div id="bank_details_container" v-show="show_bank_details" class="container center">
+      <div id="bank_details_container" v-if="show_bank_details >= 1" class="container center">
         <!--<div id="bank_details_container" class="container center">-->
         <slick class="" ref="bank_details_slider" :options="slickOptions" @afterChange="handleAfterChangeBank">
-          <div class="card" href="#one!">
+          <div class="card" v-for="(details, bank) of all_bank_details">
             <div class="card-content">
-              <span class="card-title">Bank 1</span>
-              <p>I am a very simple card. I am good at containing small bits of information.
-                I am convenient because I require little markup to use effectively.</p>
+              <span class="card-title">{{ bank }}</span>
+              <p class="bank_info_text col l6">Interest Rate: </p>
+              <p class="col l6">{{ details.interest_rate }} %</p>
+              <p class="bank_info_text col l6">Tenure: </p>
+              <p class="col l6">{{ details.tenure }} years</p>
+              <p class="bank_info_text col l6">Monthly Repayment: </p>
+              <p class="col l6">S$ {{ details.monthly_repay.toLocaleString() }}</p>
             </div>
-            <div class="card-action" id="bank_details_0">
-              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank"
-                 v-bind:class="{disabled: selectedBank !== 0}">Save Plan</a>
-            </div>
-          </div>
-          <div class="card" href="#one!">
-            <div class="card-content">
-              <span class="card-title">Bank 2</span>
-              <p>I am a very simple card. I am good at containing small bits of information.
-                I am convenient because I require little markup to use effectively.</p>
-            </div>
-            <div class="card-action">
-              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank"
-                 v-bind:class="{disabled: selectedBank !== 1}">Save Plan</a>
-            </div>
-          </div>
-          <div class="card" href="#one!">
-            <div class="card-content">
-              <span class="card-title">Bank 3</span>
-              <p>I am a very simple card. I am good at containing small bits of information.
-                I am convenient because I require little markup to use effectively.</p>
-            </div>
-            <div class="card-action">
-              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank"
-                 v-bind:class="{disabled: selectedBank !== 2}">Save Plan</a>
-            </div>
-          </div>
-          <div class="card" href="#one!">
-            <div class="card-content">
-              <span class="card-title">Bank 4</span>
-              <p>I am a very simple card. I am good at containing small bits of information.
-                I am convenient because I require little markup to use effectively.</p>
-            </div>
-            <div class="card-action">
-              <a class="btn color_btn" type="Submit" v-on:click="printSelectedBank"
-                 v-bind:class="{disabled: selectedBank !== 3}">Save Plan</a>
+            <div class="card-action center">
+              <a class="btn color_btn" v-on:click="printSelectedBank"
+                 v-bind:class="{disabled: selectedBank_idx !== Object.keys(all_bank_details).indexOf(bank)}">Save Plan</a>
             </div>
           </div>
 
@@ -113,6 +84,7 @@
   import 'slick-carousel/slick/slick-theme.css';
   import * as M from "materialize-css";
   import processFireBase from "../../mixins/processFireBase";
+  import Vue from 'vue';
 
   export default {
     components: {
@@ -137,13 +109,12 @@
         model_list: [],
         selected_model: '',
         calculatedPrice: '',
-        show_bank_details: false,
+        show_bank_details: 0, // 0 means do not show, 1 means it is ready to be rendered, 2 means rendered to screen already
         saved_bank_details: false,
-        selectedBank: 0,
-        interest_rate: 0,
-        monthly_repay: 0,
-        tenure: 5,
+        all_bank_details: {},
+        selectedBank_idx: -1,
         slickOptions: {
+          dots: true,
           centerMode: true,
           centerPadding: '60px',
           slidesToShow: 3,
@@ -206,9 +177,20 @@
 
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === this.DONE) {
-            let loan_info = console.log(this.responseText);
-            self.show_bank_details = true;
-            self.$refs.bank_details_slider.reSlick();
+            let loan_info = JSON.parse(this.responseText);
+            const compiled_bank_info = self.parseBankHtml(loan_info.content);
+            self.selectedBank_idx = -1;
+            // Delete all the existing properties first (existing banks)
+            self.show_bank_details = 0;
+            for (let [key, value] of Object.entries(self.all_bank_details)) {
+              Vue.delete(self.all_bank_details, key);
+            }
+            // Then add all the new banks
+            self.show_bank_details = 1;
+            for (let [key, value] of Object.entries(compiled_bank_info)) {
+              self.all_bank_details = Object.assign({}, self.all_bank_details, {[key]: value});
+            }
+            self.selectedBank_idx = 0; // init to highlight the centre choice by default
           }
         });
 
@@ -255,14 +237,22 @@
         return 'https://cors-anywhere.herokuapp.com/' + "https://www.moneysmart.sg/ajax/singlewiz/getSingleWizTableData?channel=car-loan&channelSlug=car-loan&page=1&sort=&order=&limit=5&filters%5Bloan_amount%5D=" + amount + "&filters%5Bloan_tenure_unit%5D=years&filters%5Bloan_tenure%5D=5";
       },
       printSelectedBank: function () {
+        let self = this;
+        const plan_id = this.plan_id;
         // console.log(this.selectedBank);
-        console.log($(this.$refs.bank_details_slider));
+        // console.log(this.saved_data);
         // Save all bank details into the variables
         // Then save into firebase
-        this.saveToFireBase();
+        this.saveToFireBase().then(function() {
+          // push user to next page after saving
+          self.$router.push({name: 'Expenses', params: { plan_id }});
+        }).catch(function(err) {
+          console.log(err);
+        });
       },
       handleAfterChangeBank(event, slick, currentSlide) {
-        this.selectedBank = currentSlide;
+        this.selectedBank_idx = currentSlide;
+        // console.log(this.selectedBank_idx);
       },
       updateCarousel: function () {
         let instance = M.Carousel.getInstance(this.$refs.car_images);
@@ -290,15 +280,40 @@
             }
           }
         });
+      },
+      getElements: function (html, selector) {
+          let div = document.createElement("div"); // the container element
+          div.innerHTML = html; // set it's html to 'html'
+          let elems = div.querySelectorAll(selector); // select the elements that match the CSS selector 'selector'
+          // return their outerHTML (elems is an array like object so map is not defined thus we have to call it in this way)
+          return Array.prototype.map.call(elems, function(e) {
+            return e.innerHTML;
+          });
+        },
+      parseBankHtml: function(html) {
+        let compiled_bank_details = {};
+        let bank_list = this.getElements(html, ".bank-title");
+        let summary_list = this.getElements(html, ".summary-box");
+        for (const [idx, bank] of Object.entries(bank_list)) {
+          let extract_details = this.getElements(summary_list[idx], "span").slice(1,4);
+          let bank_details = {};
+          bank_details["monthly_repay"] = parseInt(extract_details[0].replace(/,/g, "").replace(/\$/g, ""));
+          bank_details["interest_rate"] = parseFloat(extract_details[1].replace(/%/g, ""));
+          bank_details["tenure"] = parseFloat(extract_details[2].replace(/( years)/g, ""));
+          compiled_bank_details[bank] = bank_details;
+        }
+        return compiled_bank_details;
       }
     }
     ,
     mounted() {
       this.getCarList();
-      let self = this;
       // self.$refs.car_images.reSlick();
       // console.log(this.$refs.car_images);
       // console.log($(this.$refs.car_images));
+
+      // Had to do this, because slick creates separate new element that vue css cant touch
+      $( "<style>.slick-arrow:before { color: #272A43 !important; }</style>" ).appendTo( "head" );
 
     },
     computed: {
@@ -308,10 +323,31 @@
           model: this.selected_model,
           price: this.calculatedPrice,
           loanBool: this.saved_bank_details,
+          selected_bank: this.selected_bank,
           interestRate: this.interest_rate,
           monthlyRepay: this.monthly_repay,
           tenure: this.tenure
         }
+      },
+      selected_bank: function() {
+        if (this.selectedBank_idx !== -1 ) {
+          return Object.keys(this.all_bank_details)[this.selectedBank_idx]
+        } else return '';
+      },
+      interest_rate: function() {
+        if (this.selectedBank_idx !== -1 ) {
+          return this.all_bank_details[this.selected_bank].interest_rate;
+        } else return 0;
+      },
+      monthly_repay: function() {
+        if (this.selectedBank_idx !== -1 ) {
+          return this.all_bank_details[this.selected_bank].monthly_repay;
+        } else return 0;
+      },
+      tenure: function() {
+        if (this.selectedBank_idx !== -1 ) {
+          return this.all_bank_details[this.selected_bank].tenure;
+        } else return 0;
       }
     },
     beforeUpdate() {
@@ -325,6 +361,11 @@
           // this.$refs.car_images.create(this.slickOptions);
           this.initCarousel = true;
           this.refreshCarousel();
+        }
+
+        if(this.show_bank_details === 1) {
+          this.show_bank_details = 2;
+          this.$refs.bank_details_slider.reSlick();
         }
       });
     }
@@ -423,6 +464,18 @@
   #car_brand {
     font-family: 'Calibri';
   }
+
+  .card {
+    min-height: 320px;
+  }
+
+  .card-action {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+  }
+
+
 
 
 </style>

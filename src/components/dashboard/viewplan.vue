@@ -47,7 +47,7 @@
           <p class="col l6 info_text">Brand:</p>
           <p class="col l6 display_text">{{ activePlanDetails.car.car_data.brand }}</p>
           <p class="col l6 info_text">Model:</p>
-          <p class="col l6 display_text">{{ activePlanDetails.car.car_data.model}}</p>
+          <p class="col l6 display_text">{{ activePlanDetails.car.car_data.model.replace(/-/g, " ").replace(/_/g, " ")}}</p>
           <p class="col l6 info_text">Price:</p>
           <p class="col l6 display_text">S$ {{ activePlanDetails.car.car_data.price.toLocaleString() }}</p>
           <div class="bank_details" v-show="activePlanDetails.car.car_data.loanBool">
@@ -215,6 +215,7 @@
     font-family: 'Helvetica Rounded';
     font-weight: bold;
     font-size: 1.5rem;
+    text-transform: capitalize;
 
     margin: 0;
   }

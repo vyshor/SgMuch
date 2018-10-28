@@ -14,8 +14,8 @@ export default {
         [process_name + "_data"]: process_data
       };
 
-      db.collection('users').doc('' + uid).collection("saved_plans").doc(plan_id).update({[process_name]: process_details});
       this.updateSavedDate(uid, plan_id);
+      return db.collection('users').doc('' + uid).collection("saved_plans").doc(plan_id).update({[process_name]: process_details});
     },
     loadPlanFromFireBase: function (uid, plan_id) {
       let db = firebase.firestore();
@@ -30,7 +30,7 @@ export default {
     saveToFireBase: function () {
       this.currentStatus = 2; // cus status = saved
 
-      this.postToFireBase(this.user_id, this.plan_id, this.currentState, this.saved_data, this.currentStatus);
+      return this.postToFireBase(this.user_id, this.plan_id, this.currentState, this.saved_data, this.currentStatus);
     },
     getUserDetails: function() {
       let db = firebase.firestore();
