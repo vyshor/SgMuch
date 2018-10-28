@@ -2,6 +2,7 @@
   "presets": [
     "vue",
 //    ["env", { "modules": false }]
-    ["@babel/preset-env"]
+    ["@babel/preset-env"],
+//    [ "env", { "targets": { "uglify": true } } ]
   ]
 }

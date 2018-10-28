@@ -1,6 +1,7 @@
 var path = require('path')
 var webpack = require('webpack')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require("uglifyes-webpack-plugin");
 
 module.exports = {
   entry: './src/main.js',
@@ -40,7 +41,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        // exclude: /node_modules/,
+        exclude: /node_modules/,
         query: {
           presets: ["@babel/env"]
         }
@@ -104,7 +105,8 @@ if (process.env.NODE_ENV === 'production') {
     //     ecma: 8
     //   }
     // }),
-    new webpack.optimize.UglifyJsPlugin({
+    new UglifyJsPlugin({
+    // new webpack.optimize.UglifyJsPlugin({
       // uglifyOptions: {
       //   ecma: 8
       // },
