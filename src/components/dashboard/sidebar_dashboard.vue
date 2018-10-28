@@ -63,6 +63,8 @@
     background-color: white;
     border: #707070 solid 1px;
     margin-top: 5%;
+    margin-left: 3%;
+    margin-right: 3%;
   }
 
   .savedPlan.active {

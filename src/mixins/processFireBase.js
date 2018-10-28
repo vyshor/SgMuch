@@ -43,7 +43,7 @@ export default {
         name: name,
         email: email
       };
-      db.collection('users').doc(this.user_id).update(updated_data);
+      return db.collection('users').doc(this.user_id).update(updated_data); // return promise
     },
     updateUserPlanCount: function(planCount) {
       let db = firebase.firestore();

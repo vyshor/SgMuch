@@ -87,7 +87,7 @@
   import progressbar from "../dashboard/progressbar";
   import nextbar from "../dashboard/nextbar";
   import {GChart} from 'vue-google-charts';
-  import formatPieData from '../../mixins/formatPieData'
+  import formatPieData from '../../mixins/formatPieData';
   import processFireBase from "../../mixins/processFireBase";
 
   export default {

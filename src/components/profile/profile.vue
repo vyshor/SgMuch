@@ -62,12 +62,15 @@
         this.changingDetails = true;
       },
       saveChanges: function() {
+        let self = this;
         if (SHA256(this.password).toString() === this.hashed_password) {
           // Correct current password
-          // Update firebase
+          // Update firebase own account
           const user = firebase.auth().currentUser;
           user.updateEmail(this.email).then(function() {
-            console.log("success")
+            console.log("success");
+            // Then update own database
+            this.updateUserDetails(self.name, self.email);
           }).catch(function(error) {
             // An error happened.
             console.log(error);

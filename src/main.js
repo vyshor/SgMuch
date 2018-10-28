@@ -9,10 +9,13 @@ import AsyncComputed from 'vue-async-computed'
 import 'babel-polyfill'
 import * as VueGoogleMaps from "vue2-google-maps"
 import VueGoogleCharts from 'vue-google-charts'
+import VueFlex from "vue-flex";
+import "vue-flex/dist/vue-flex.css";
 
 Vue.use(VueResource);
 Vue.use(AsyncComputed);
 Vue.use(VueGoogleCharts);
+Vue.use(VueFlex);
 
 //Custom directives
 //Global directives
