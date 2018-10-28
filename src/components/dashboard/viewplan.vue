@@ -7,7 +7,7 @@
       <flex-col id="loading_screen" class="col l9 flexbox_el" v-if="!doneLoading">
         Loading
       </flex-col>
-      <flex-col id="plan_details" class="col l9 flexbox_el" v-else>
+      <flex-col alignV="start" justify="start" id="plan_details" class="col l9 flexbox_el" v-else>
         <p class="center" id="plan_name">{{ activePlanDetails.planName }}</p>
         <div class="display_box row center">
           <p class="col l12 process_title">Income</p>
@@ -21,7 +21,7 @@
             <router-link v-bind:to="'/dashboard/income/' + activePlanId" class="edit_btn right">Edit</router-link>
           </div>
         </div>
-        <div class="display_box row center" v-show="activePlanDetails.housing.status === 2">
+        <div class="display_box row center" v-if="activePlanDetails.housing.status === 2">
           <p class="col l12 process_title">Housing</p>
           <p class="col l6 info_text">Location:</p>
           <p class="col l6 display_text">{{ activePlanDetails.housing.housing_data.location }}</p>
@@ -42,7 +42,7 @@
             <router-link v-bind:to="'/dashboard/housing/' + activePlanId" class="edit_btn right">Edit</router-link>
           </div>
         </div>
-        <div class="display_box row center" v-show="activePlanDetails.car.status === 2">
+        <div class="display_box row center" v-if="activePlanDetails.car.status === 2">
           <p class="col l12 process_title">Car</p>
           <p class="col l6 info_text">Brand:</p>
           <p class="col l6 display_text">{{ activePlanDetails.car.car_data.brand }}</p>
@@ -63,7 +63,7 @@
             <router-link v-bind:to="'/dashboard/car/' + activePlanId" class="edit_btn right">Edit</router-link>
           </div>
         </div>
-        <div class="display_box row center" v-show="activePlanDetails.expenses.status === 2">
+        <div class="display_box row center" v-if="activePlanDetails.expenses.status === 2">
           <p class="col l12 process_title">Expenses</p>
           <div id="pie_container">
             <p class="center">Monthly Expenses Breakdown</p>
@@ -205,6 +205,7 @@
     margin: auto;
     border: #272A43 4px solid;
 
+    margin-top: 0;
     margin-bottom: 2%;
   }
 
