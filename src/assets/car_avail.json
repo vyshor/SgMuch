@@ -1,46 +1,46 @@
 {
     "BMW": {
-        "0": "below1600",
-        "1": "above1600"
+        "bmw-1-series": "below1600",
+        "bmw-3-series": "above1600"
     },
     "Mercedes": {
-        "0": "below1600",
-        "1": "above1600"
+        "merc-b-class": "below1600",
+        "merc-a-class": "above1600"
     },
     "Volvo": {
-        "0": "below1600",
-        "1": "above1600"
+        "volvo-s60": "below1600", 
+        "volvo-s90": "above1600"
     },
     "Mini": {
-        "0": "below1600",
-        "1": "above1600"
+        "mini-cooper-convertible": "below1600",
+        "mini-cooper-s": "above1600"
     },
     "Toyota": {
-        "0": "below1600",
-        "1": "above1600"
+        "toyota_sienta": "below1600",
+        "toyota_camry": "above1600"
     },
     "Nissan": {
-        "0": "below1600",
-        "1": "above1600"
+        "nissan-note": "below1600",
+        "nissan-qashqai": "above1600"
     },
-    "Mitsubitshi": {
-        "0": "below1600",
-        "1": "above1600"
+    "Mitsubishi": {
+        "mitsubishi-attrage": "below1600",
+        "mitsubishi-outlander": "above1600"
     },
     "Mazda": {
-        "0": "below1600",
-        "1": "above1600"
+        "mazda-2-hatchback": "below1600",
+        "mazda-3-sedan": "above1600"
     },
     "Honda": {
-        "0": "below1600",
-        "1": "above1600"
+        "honda-civic": "below1600",
+        "honda-civic-type-r": "above1600"
     },
     "Ford": {
-        "0": "below1600",
-        "1": "above1600"
+        "ford-focus-hatchback": "below1600",
+        "ford-mondeo": "above1600"
     },
     "Chevrolet": {
-        "0": "below1600",
-        "1": "above1600"
+        "chevrolet-cruze": "below1600",
+        "chevrolet-orlando": "above1600"
     }
 }
