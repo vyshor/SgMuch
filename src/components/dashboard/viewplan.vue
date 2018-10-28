@@ -3,11 +3,11 @@
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
     <a class="btn btn-large" id="start_new_plan" v-on:click="startNewPlan">Start new plan</a>
-    <flex-row class="row" id="dashboard_main">
-      <flex-col id="loading_screen" class="col l9 flexbox_el" v-if="!doneLoading">
+    <flex class="row" id="dashboard_main">
+      <flex column id="loading_screen" class="col l9 flexbox_el" v-if="!doneLoading">
         Loading
-      </flex-col>
-      <flex-col id="plan_details" class="col l9 flexbox_el" v-else>
+      </flex>
+      <flex column id="plan_details" class="col l9 flexbox_el" v-else>
         <p class="center" id="plan_name">{{ activePlanDetails.planName }}</p>
         <div class="display_box row center">
           <p class="col l12 process_title">Income</p>
@@ -78,11 +78,11 @@
             <router-link v-bind:to="'/dashboard/expenses/' + activePlanId" class="edit_btn right">Edit</router-link>
           </div>
         </div>
-      </flex-col>
-      <flex-col class="col l3 flex_box_el" id="sidebar_container">
+      </flex>
+      <flex column class="col l3 flex_box_el" id="sidebar_container">
       <sidebar_dashboard v-bind:info="{planInfo, planCount}" :activePlanId.sync="activePlanId" @deletePlan="deletePlan"></sidebar_dashboard>
-      </flex-col>
-    </flex-row>
+      </flex>
+    </flex>
   </div>
 
 </template>
@@ -99,11 +99,13 @@
   import formatPieData from '../../mixins/formatPieData';
   import FlexRow from "vue-flex/lib/components/FlexRow";
   import FlexCol from "vue-flex/lib/components/FlexCol";
+  import Flex from "vue-flex/lib/components/Flex";
 
   export default {
     components: {
       FlexCol,
       FlexRow,
+      Flex,
       'logo_dashboard': logo_dashboard,
       'navbar_dashboard': navbar_dashboard,
       'sidebar_dashboard': sidebar_dashboard

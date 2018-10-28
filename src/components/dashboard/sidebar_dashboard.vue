@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="sidebar">
     <div id="savedplans">
       <div id="no_saved_plans" class="center" v-show="!this.info.planCount">
         <p>You have not created any plans yet</p>
@@ -99,6 +99,10 @@
 
   .routerName.active {
     color: #FF39E5;
+  }
+
+  #sidebar{
+    width: 100%;
   }
 
 
