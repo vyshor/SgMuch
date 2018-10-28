@@ -2,7 +2,13 @@
   "presets": [
     "vue",
 //    ["env", { "modules": false }]
-    ["@babel/preset-env"],
+    "@babel/preset-env"
 //    [ "env", { "targets": { "uglify": true } } ]
-  ]
+  ],
+//  "plugins": [
+//    ["@babel/plugin-transform-runtime", {
+//      "polyfill": false,
+//      "regenerator": true
+//    }]
+//  ]
 }

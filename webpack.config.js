@@ -4,7 +4,7 @@ var webpack = require('webpack')
 const UglifyJsPlugin = require("uglifyes-webpack-plugin");
 
 module.exports = {
-  entry: './src/main.js',
+  entry: ['regenerator-runtime/runtime', './src/main.js'],
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
