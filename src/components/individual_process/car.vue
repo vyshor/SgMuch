@@ -8,7 +8,11 @@
       <div id="price_car">
         <!--<img v-bind:src="getImgUrl('BMW/bmw-1-series')">-->
         <div id="car_images_container" class="center carousel" ref="car_images">
-            <a class="carousel-item" href="" v-for="(url, idx) of allmodelurl_list"><img v-bind:src="getImgUrl(url)"></a>
+          <div class="carousel-item" v-for="(url, idx) of allmodelurl_list">
+            <img v-bind:src="getImgUrl(url)">
+            <p class="carousel-brand">{{ url.split("/")[0] }}</p>
+            <p class="carousel-model">{{ url.split("/")[1].replace(/-/g, " ").replace(/_/g, " ") }}</p>
+          </div>
           <!--<a class="carousel-item" href="#two!"><img src="https://lorempixel.com/250/250/nature/2"></a>-->
           <!--<a class="carousel-item" href="#three!"><img src="https://lorempixel.com/250/250/nature/3"></a>-->
           <!--<a class="carousel-item" href="#four!"><img src="https://lorempixel.com/250/250/nature/4"></a>-->
@@ -29,7 +33,7 @@
             <div class="input-field browser-default col l6">
               <select name="model" class="browser-default" id="car_model" v-model="selected_model"
                       v-on:change="updateCarousel">
-                <option v-for="carModel in model_list" :value="carModel.carModel">{{ carModel.carModel }}</option>
+                <option v-for="carModel in model_list" :value="carModel.carModel">{{ carModel.carModel.replace(/-/g, " ").replace(/_/g, " ") }}</option>
               </select>
             </div>
           </div>
@@ -163,14 +167,15 @@
               }
             }
           ]
-        }
+        },
+        initCarousel: false
       }
 
     },
     methods: {
       getPrice: function (e) {
         e.preventDefault();
-        this.updateCarousel();
+        // this.updateCarousel();
         let data = JSON.stringify({
           country: "Thailand",
           brand: this.selected_brand,
@@ -226,19 +231,22 @@
                 self.allmodelurl_list.push(key + '/' + modelName);
               }
             }
-            console.log(self.allmodelurl_list);
+            // console.log(self.allmodelurl_list);
+            // console.log(self.model_table);
             self.selected_brand = 'BMW';
             self.updateModelDropdown();
           }
         });
 
       },
-      updateModelDropdown: function () {
+      updateModelDropdown: function (selection = null) {
         this.model_list.pop();
         this.model_list.pop();
         for (let carModel of Object.keys(this.model_table[this.selected_brand])) {
           this.model_list.push({carModel});
-          this.selected_model = carModel;
+          if (typeof(selection) === "object") {
+            this.selected_model = carModel;
+          }
         }
       },
       prepMoneySmartURL: function () {
@@ -248,7 +256,7 @@
       },
       printSelectedBank: function () {
         // console.log(this.selectedBank);
-        console.log($(this.$refs.bank_details_slider))
+        console.log($(this.$refs.bank_details_slider));
         // Save all bank details into the variables
         // Then save into firebase
         this.saveToFireBase();
@@ -260,32 +268,38 @@
         let instance = M.Carousel.getInstance(this.$refs.car_images);
         let brand_index = Object.keys(this.model_table).findIndex(x => x === this.selected_brand);
         let model_index = Object.keys(this.model_table[this.selected_brand]).findIndex(x => x === this.selected_model);
-        let slide_index = (brand_index - 1) * 2 + model_index;
+        let slide_index = (brand_index) * 2 + model_index;
         instance.set(slide_index);
       },
-      getImgUrl: function(url) {
-        // let images = requireContext('url', false, /\.jpg$/);
-        // return images('./' + url + ".jpg");
-        // return url + '.jpg'
+      getImgUrl: function (url) {
         return 'https://raw.githubusercontent.com/vyshor/sgmuch/master/src/assets/ImagesFolder/' + url + '.jpg';
+      },
+      refreshCarousel: function () {
+        let self = this;
+        $(this.$refs.car_images).carousel({
+          onCycleTo: function (ele, dragge) {
+            // console.log($(ele).index());
+            let idx = $(ele).index();
+            let brand_index = Math.floor(idx / 2);
+            let model_index = idx % 2;
+            if (Object.keys(self.model_table).length) {
+              self.selected_brand = Object.keys(self.model_table)[brand_index];
+              self.selected_model = Object.keys(Object.values(self.model_table)[brand_index])[model_index];
+              self.updateModelDropdown(self.selected_model);
+              // console.log(self.selected_brand, self.selected_model);
+            }
+          }
+        });
       }
     }
     ,
     mounted() {
       this.getCarList();
       let self = this;
-      console.log(this.$refs.car_images);
-      $(this.$refs.car_images).carousel({
-        onCycleTo: function (ele, dragge) {
-          let idx = $(ele).index();
-          let brand_index = Math.floor(idx / 2);
-          let model_index = idx % 2;
-          if (Object.keys(self.model_table).length) {
-            self.selected_brand = Object.keys(self.model_table)[brand_index];
-            self.selected_model = Object.keys(Object.values(self.model_table)[brand_index])[model_index];
-          }
-        }
-      });
+      // self.$refs.car_images.reSlick();
+      // console.log(this.$refs.car_images);
+      // console.log($(this.$refs.car_images));
+
     },
     computed: {
       saved_data: function () {
@@ -299,7 +313,20 @@
           tenure: this.tenure
         }
       }
-
+    },
+    beforeUpdate() {
+      // if (this.$refs.car_images) {
+      //   this.$refs.car_images.destroy();
+      // }
+    },
+    updated() {
+      this.$nextTick(function () {
+        if (!this.initCarousel && this.$refs.car_images) {
+          // this.$refs.car_images.create(this.slickOptions);
+          this.initCarousel = true;
+          this.refreshCarousel();
+        }
+      });
     }
   }
 
@@ -367,6 +394,34 @@
 
   .slick-slide.slick-current.slick-active > div > div.card > .card-content {
     color: #FF39E5;
+  }
+
+  .carousel-brand {
+    font-family: 'Helvetica Rounded';
+    font-weight: bold;
+    visibility: hidden;
+  }
+
+  .carousel-model {
+    font-family: 'Calibri';
+    text-transform: capitalize;
+    visibility: hidden
+  }
+
+  .active > p.carousel-brand {
+    visibility: visible;
+  }
+  .active > p.carousel-model {
+    visibility: visible;
+  }
+
+  #car_model {
+    text-transform: capitalize;
+    font-family: 'Calibri';
+  }
+
+  #car_brand {
+    font-family: 'Calibri';
   }
 
 

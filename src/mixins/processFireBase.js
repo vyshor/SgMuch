@@ -5,6 +5,10 @@ export default {
     postToFireBase: function (uid, plan_id, process_name, process_data, new_status) {
       let db = firebase.firestore();
 
+      db.settings({
+        timestampsInSnapshots: true
+      });
+
       let process_details = {
         status: new_status,
         [process_name + "_data"]: process_data
@@ -25,6 +29,7 @@ export default {
     },
     saveToFireBase: function () {
       this.currentStatus = 2; // cus status = saved
+
       this.postToFireBase(this.user_id, this.plan_id, this.currentState, this.saved_data, this.currentStatus);
     },
     getUserDetails: function() {
