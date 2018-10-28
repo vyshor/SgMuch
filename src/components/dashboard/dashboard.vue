@@ -2,14 +2,16 @@
   <div>
     <logo_dashboard></logo_dashboard>
     <navbar_dashboard></navbar_dashboard>
-    <div class="row" id="dashboard_main">
-      <div id="plan_details" class="col l9">
+    <flex-row class="row" id="dashboard_main">
+      <flex-col id="plan_details" class="col l9">
         <div class="center row">
           <a class="btn btn-large" id="start_new_plan" v-on:click="startNewPlan">Start new plan</a>
         </div>
-      </div>
-      <sidebar_dashboard v-bind:info="{planInfo, planCount, activePlanId}" @deletePlan="deletePlan" class="col l3"></sidebar_dashboard>
-    </div>
+      </flex-col>
+      <flex-col class="col l3 flex_box_el" id="sidebar_container">
+      <sidebar_dashboard v-bind:info="{planInfo, planCount, activePlanId}" @deletePlan="deletePlan"></sidebar_dashboard>
+      </flex-col>
+    </flex-row>
   </div>
 </template>
 
@@ -21,9 +23,13 @@
   import sidebar_dashboard from"./sidebar_dashboard";
   import processFireBase from "../../mixins/processFireBase";
   import dashboardPlansMethods from "../../mixins/dashboardPlansMethods";
+  import FlexRow from "vue-flex/lib/components/FlexRow";
+  import FlexCol from "vue-flex/lib/components/FlexCol";
 
   export default {
     components: {
+      FlexRow,
+      FlexCol,
       'logo_dashboard': logo_dashboard,
       'navbar_dashboard': navbar_dashboard,
       'sidebar_dashboard': sidebar_dashboard
@@ -79,5 +85,12 @@
     border-color: #FF39E5;
     border-radius: 25px;
   }
+
+  #sidebar_container {
+    min-height: 787px;
+    background-color: #BFB2BF;
+    padding: 0;
+  }
+
 
 </style>

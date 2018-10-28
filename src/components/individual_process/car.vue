@@ -6,9 +6,9 @@
     <nextbar v-bind:info="{currentState, path, plan_id, currentStatus}"></nextbar>
     <div id="dashboard_main">
       <div id="price_car">
-        <!--<img src="../../assets/ImagesFolder/BMW/bmw-1-series.jpg">-->
+        <!--<img v-bind:src="getImgUrl('BMW/bmw-1-series')">-->
         <div id="car_images_container" class="center carousel" ref="car_images">
-            <a class="carousel-item" href="" v-for="(url, idx) of allmodelurl_list"><img v-bind:src="url"></a>
+            <a class="carousel-item" href="" v-for="(url, idx) of allmodelurl_list"><img v-bind:src="getImgUrl(url)"></a>
           <!--<a class="carousel-item" href="#two!"><img src="https://lorempixel.com/250/250/nature/2"></a>-->
           <!--<a class="carousel-item" href="#three!"><img src="https://lorempixel.com/250/250/nature/3"></a>-->
           <!--<a class="carousel-item" href="#four!"><img src="https://lorempixel.com/250/250/nature/4"></a>-->
@@ -223,7 +223,7 @@
             for (let [key, value] of Object.entries(data)) {
               self.model_table = Object.assign({}, self.model_table, {[key]: value});
               for (let [modelName, ccData] of Object.entries(value)) {
-                self.allmodelurl_list.push('../../src/assets/ImagesFolder/' + key + '/' + modelName + '.jpg');
+                self.allmodelurl_list.push(key + '/' + modelName);
               }
             }
             console.log(self.allmodelurl_list);
@@ -266,13 +266,15 @@
       getImgUrl: function(url) {
         // let images = requireContext('url', false, /\.jpg$/);
         // return images('./' + url + ".jpg");
-        return url + '.jpg'
+        // return url + '.jpg'
+        return 'https://raw.githubusercontent.com/vyshor/sgmuch/master/src/assets/ImagesFolder/' + url + '.jpg';
       }
     }
     ,
     mounted() {
       this.getCarList();
       let self = this;
+      console.log(this.$refs.car_images);
       $(this.$refs.car_images).carousel({
         onCycleTo: function (ele, dragge) {
           let idx = $(ele).index();

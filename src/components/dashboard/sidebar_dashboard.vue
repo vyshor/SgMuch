@@ -1,17 +1,19 @@
 <template>
-  <div id="savedplans">
-    <div id="no_saved_plans" class="center" v-show="!this.info.planCount">
-      <p>You have not created any plans yet</p>
-    </div>
-    <div class="center savedPlan" v-for="(value, key) in this.info.planInfo"
-         v-bind:class="{active: activePlanId === key}">
-      <p class="planName">
-        <router-link v-bind:to="'/dashboard/viewplan/' + key" class="routerName"
-                     v-bind:class="{active: activePlanId === key}">{{ value.planName }}
-        </router-link>
-        <i class="small material-icons delete_entry right waves-effect"
-           @click="$emit('deletePlan', key)">close</i></p>
-      <p class="lastSaved">Last saved on {{ convertDate(value.lastSaved) }}</p>
+  <div>
+    <div id="savedplans">
+      <div id="no_saved_plans" class="center" v-show="!this.info.planCount">
+        <p>You have not created any plans yet</p>
+      </div>
+      <div class="center savedPlan" v-for="(value, key) in this.info.planInfo"
+           v-bind:class="{active: activePlanId === key}">
+        <p class="planName">
+          <router-link v-bind:to="'/dashboard/viewplan/' + key" class="routerName"
+                       v-bind:class="{active: activePlanId === key}">{{ value.planName }}
+          </router-link>
+          <i class="small material-icons delete_entry right waves-effect"
+             @click="$emit('deletePlan', key)">close</i></p>
+        <p class="lastSaved">Last saved on {{ convertDate(value.lastSaved) }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -24,8 +26,7 @@
     ,
     mixins: [processFireBase],
     data() {
-      return {
-      }
+      return {}
     },
     methods: {
       convertDate: function (inputFormat) {
@@ -43,10 +44,10 @@
 </script>
 
 <style scoped>
+
   #savedplans {
-    background-color: #BFB2BF;
     height: 100%;
-    min-height: 787px;
+    width: 100%;
   }
 
   #no_saved_plans {

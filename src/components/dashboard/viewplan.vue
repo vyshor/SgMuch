@@ -7,7 +7,7 @@
       <flex-col id="loading_screen" class="col l9 flexbox_el" v-if="!doneLoading">
         Loading
       </flex-col>
-      <flex-col alignV="start" justify="start" id="plan_details" class="col l9 flexbox_el" v-else>
+      <flex-col id="plan_details" class="col l9 flexbox_el" v-else>
         <p class="center" id="plan_name">{{ activePlanDetails.planName }}</p>
         <div class="display_box row center">
           <p class="col l12 process_title">Income</p>
@@ -250,6 +250,8 @@
   }
 
   #sidebar_container {
+    min-height: 787px;
+    background-color: #BFB2BF;
     padding: 0;
   }
 
