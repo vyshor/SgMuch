@@ -12,7 +12,7 @@
           <div class="center">
             <form action="" class="row" id="monthly_income_field_container">
               <p class="col l1 push-l1">S$</p>
-              <div class="col l8 push-l1">
+              <div class="col l8 push-l1"> 
                 <div class="input-field">
                   <input v-model="monthly_income" type="number" name="monthly_income" class="validate"
                          id="monthly_income_field" step="0.01"/>
@@ -104,6 +104,7 @@
         net_income: ''
       }
     },
+
     methods: {
       loadCourses: function () {
         if (this.uni_checked) {
@@ -134,6 +135,36 @@
       calculateIncome: function(e = null) {
         if (e !== null) e.preventDefault();
         // function that takes the monthly income and returns annual income, income tax, and net income
+        this.annual_income = this.monthly_income * 12.00;
+
+        // income tax
+        if (this.annual_income <= 20000) {
+          this.income_tax = 0;
+        } else if (20000 < this.annual_income <= 30000) {
+          this.income_tax = 0 + (this.annual_income - 20000) * (0.02);
+        } else if (30000 < this.annual_income <= 40000) {
+          this.income_tax = 200 + (this.annual_income - 30000) * (0.035);
+        } else if (40000 < this.annual_income <= 80000) {
+          this.income_tax = 550 + (this.annual_income - 40000) * (0.07);
+        } else if (80000 < this.annual_income <= 120000) {
+          this.income_tax = 3350 + (this.annual_income - 80000) * (0.115);
+        } else if (120000 < this.annual_income <= 160000) {
+          this.income_tax = 7950 + (this.annual_income - 120000) * (0.15);
+        } else if (160000 < this.annual_income <= 200000) {
+          this.income_tax = 1395. + (this.annual_income - 160000) * (0.18);
+        } else if (200000 < this.annual_income <= 240000) {
+          this.income_tax = 21150 + (this.annual_income - 200000) * (0.19);
+        } else if (240000 < this.annual_income <= 280000) {
+          this.income_tax = 28750 + (this.annual_income - 240000) * (0.195);
+        } else if (280000 < this.annual_income <= 320000) {
+          this.income_tax = 36550 + (this.annual_income - 280000) * (0.2);
+        } else if (this.annual_income > 320000) {
+          this.income_tax = 44550 + (this.annual_income - 320000) * (0.22);
+        } else {
+          this.income_tax = 'invalid number';
+        }
+
+        this.net_income = this.annual_income - this.income_tax;
         this.saveToFireBase();
       }
     },
