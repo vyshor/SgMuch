@@ -54,15 +54,15 @@
       <div id="income_info" class="col l4 push-l2">
         <div class="row">
           <p class="col l6 info_text">Annual Income:</p>
-          <p class="col l6" id="annual_income">S$ {{ annual_income }}</p>
+          <p class="col l6" id="annual_income">S$ {{ annual_income.toLocaleString() }}</p>
         </div>
         <div class="row">
           <p class="col l6 info_text">Income Tax:</p>
-          <p class="col l6" id="income_tax">S$ {{ income_tax }}</p>
+          <p class="col l6" id="income_tax">S$ {{ income_tax.toLocaleString() }}</p>
         </div>
         <div class="row">
           <p class="col l6 info_text">Net Income:</p>
-          <p class="col l6" id="net_income">S$ {{ net_income }}</p>
+          <p class="col l6" id="net_income">S$ {{ net_income.toLocaleString() }}</p>
         </div>
       </div>
     </div>
@@ -133,8 +133,49 @@
       },
       calculateIncome: function(e = null) {
         if (e !== null) e.preventDefault();
+        let income_data = this.calculateTaxAndIncome(this.monthly_income);
+        this.annual_income = income_data.annual_income;
+        this.income_tax = income_data.income_tax;
+        this.net_income = income_data.net_income;
         // function that takes the monthly income and returns annual income, income tax, and net income
         this.saveToFireBase();
+      },
+      calculateTaxAndIncome: function(monthly_income) {
+        let data = {};
+        let annual_income = monthly_income * 12.00;
+        let income_tax = 0;
+        // income tax
+        if (annual_income <= 20000) {
+          income_tax = 0;
+        } else if (20000 < annual_income && annual_income <= 30000) {
+          income_tax = 0 + (annual_income - 20000) * (0.02);
+        } else if (30000 < annual_income && annual_income <= 40000) {
+          income_tax = 200 + (annual_income - 30000) * (0.035);
+        } else if (40000 < annual_income && annual_income <= 80000) {
+          income_tax = 550 + (annual_income - 40000) * (0.07);
+        } else if (80000 < annual_income && annual_income <= 120000) {
+          income_tax = 3350 + (annual_income - 80000) * (0.115);
+        } else if (120000 < annual_income && annual_income <= 160000) {
+          income_tax = 7950 + (annual_income - 120000) * (0.15);
+        } else if (160000 < annual_income && annual_income <= 200000) {
+          income_tax = 1395. + (annual_income - 160000) * (0.18);
+        } else if (200000 < annual_income && annual_income <= 240000) {
+          income_tax = 21150 + (annual_income - 200000) * (0.19);
+        } else if (240000 < annual_income && annual_income <= 280000) {
+          income_tax = 28750 + (annual_income - 240000) * (0.195);
+        } else if (280000 < annual_income && annual_income <= 320000) {
+          income_tax = 36550 + (annual_income - 280000) * (0.2);
+        } else if (annual_income > 320000) {
+          income_tax = 44550 + (annual_income - 320000) * (0.22);
+        } else {
+          income_tax = 'invalid number';
+        }
+        const net_income = annual_income - income_tax;
+
+        data.annual_income = Math.floor(annual_income);
+        data.income_tax = Math.floor(income_tax);
+        data.net_income = Math.floor(net_income);
+        return data;
       }
     },
     asyncComputed: {
