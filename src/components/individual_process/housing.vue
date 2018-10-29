@@ -224,6 +224,7 @@
       },
       clickKml: function (layerEvt) {
         const region_name = layerEvt.featureData.name;
+        this.zoom = 13;
         if (Object.keys(this.kml_to_locations).indexOf(region_name) !== -1) {
           // Means the click kml point is a valid entry
           const region_data = this.kml_to_locations[region_name];
