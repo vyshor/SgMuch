@@ -27,31 +27,11 @@
               <div id="password-strength-text-container">
                 <p id="password-strength-text"></p>
               </div>
-              <div id="recaptcha">
-                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
-                <noscript>
-                  <div>
-                    <div style="width: 302px; height: 422px; position: relative;">
-                      <div style="width: 302px; height: 422px; position: absolute;">
-                        <iframe
-                          src="https://www.google.com/recaptcha/api/fallback?k=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                          frameborder="0" scrolling="no"
-                          style="width: 302px; height:422px; border-style: none;">
-                        </iframe>
-                      </div>
-                    </div>
-                    <div style="width: 300px; height: 60px; border-style: none;
-                   bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
-                   background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
-      <textarea id="g-recaptcha-response" name="g-recaptcha-response"
-                class="g-recaptcha-response"
-                style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
-                          margin: 10px 25px; padding: 0px; resize: none;">
-      </textarea>
-                    </div>
-                  </div>
-                </noscript>
-              </div>
+              <vue-recaptcha
+                ref="recaptcha"
+                @verify="onCaptchaVerified"
+                @expired="onCaptchaExpired"
+                sitekey="6LeTW3cUAAAAAKHuXqpMOU5k_oP4ywr_oqMJIU_o" ></vue-recaptcha>
             </div>
           </div>
           <input class="btn btn-large grey_btn" type="Submit" value="Sign up" v-on:click="signUp"></input>
@@ -65,15 +45,20 @@
   import firebase from 'firebase';
   import image from "../../assets/logo.png";
   import SHA256 from "crypto-js/sha256";
+  import VueRecaptcha from "vue-recaptcha";
 
   export default {
     name: "signUp",
+    components: {
+      VueRecaptcha
+    },
     data() {
       return {
         image,
         name: '',
         email: '',
-        password: ''
+        password: '',
+        recaptchaBool: false
 
       }
     },
@@ -135,6 +120,13 @@
 
         // Initialise the user info
         db.collection('users').doc('' + uid).set({name:name, email:email, password: SHA256(password).toString(), planCount: 0});
+      },
+      onCaptchaVerified: function () {
+        this.recaptchaBool = true;
+      },
+      onCaptchaExpired: function () {
+        this.$refs.recaptcha.reset();
+        this.recaptchaBool = false;
       }
 
     }

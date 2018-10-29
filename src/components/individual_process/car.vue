@@ -13,10 +13,6 @@
             <p class="carousel-brand">{{ url.split("/")[0] }}</p>
             <p class="carousel-model">{{ url.split("/")[1].replace(/-/g, " ").replace(/_/g, " ") }}</p>
           </div>
-          <!--<a class="carousel-item" href="#two!"><img src="https://lorempixel.com/250/250/nature/2"></a>-->
-          <!--<a class="carousel-item" href="#three!"><img src="https://lorempixel.com/250/250/nature/3"></a>-->
-          <!--<a class="carousel-item" href="#four!"><img src="https://lorempixel.com/250/250/nature/4"></a>-->
-          <!--<a class="carousel-item" href="#five!"><img src="https://lorempixel.com/250/250/nature/5"></a>-->
         </div>
         <form id="car_info" class="center row">
           <div class="row">
@@ -42,7 +38,7 @@
             <p class="col l6" id="car_price">S$ {{ calculatedPrice.toLocaleString() }}</p>
           </div>
           <div class="row">
-            <input class="btn color_btn" type="Submit" value="Calculate" v-on:click="getPrice"
+            <input class="btn color_btn" type="Submit" value="Get Price" v-on:click="getPrice"
                    id="get_price_btn"></input>
           </div>
         </form>
@@ -323,7 +319,7 @@
           model: this.selected_model,
           price: this.calculatedPrice,
           loanBool: this.saved_bank_details,
-          selected_bank: this.selected_bank,
+          selectedBank: this.selected_bank,
           interestRate: this.interest_rate,
           monthlyRepay: this.monthly_repay,
           tenure: this.tenure

@@ -28,6 +28,7 @@ export default{
             houseType: '',
             housePrice: 0,
             loanBool: false,
+            selectedBank: '',
             interestRate: 0,
             monthlyRepay: 0,
             loanPeriod: 0
@@ -39,6 +40,7 @@ export default{
             model: '',
             price: 0,
             loanBool: false,
+            selectedBank: '',
             interestRate: 0,
             monthlyRepay: 0,
             tenure: 0

@@ -16,6 +16,12 @@ Vue.use(VueResource);
 Vue.use(AsyncComputed);
 Vue.use(VueGoogleCharts);
 Vue.use(VueFlex);
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: "AIzaSyANzkX8usvRMGp7TJSLFVaFtq-rCXSXfQ0",
+    libraries: "places" // necessary for places input
+  }
+});
 
 //Custom directives
 //Global directives
@@ -39,12 +45,6 @@ Vue.directive('theme', {
   }
 });
 
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: "AIzaSyANzkX8usvRMGp7TJSLFVaFtq-rCXSXfQ0",
-    libraries: "places" // necessary for places input
-  }
-});
 
 // Filters
 // Vue.filter('to-uppercase', (value) =>{
