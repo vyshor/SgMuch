@@ -13,6 +13,7 @@ import car from './components/individual_process/car.vue'
 import expenses from './components/individual_process/expenses.vue'
 import profile from './components/profile/profile.vue'
 import viewplan from './components/dashboard/viewplan.vue'
+import generateinvestment from './components/individual_process/generateinvestment.vue'
 
 Vue.use(Router);
 
@@ -94,6 +95,14 @@ let router = new Router({
       path: '/profile',
       name: 'Profile',
       component: profile,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/dashboard/generateinvestment/:plan_id',
+      name: 'GenerateInvestment',
+      component: generateinvestment,
       meta: {
         requiresAuth: true
       }

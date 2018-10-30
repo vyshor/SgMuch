@@ -78,6 +78,9 @@
             <router-link v-bind:to="'/dashboard/expenses/' + activePlanId" class="edit_btn right">Edit</router-link>
           </div>
         </div>
+        <div class="edit_btn_container center" id="investment_btn_container">
+          <router-link v-bind:to="'/dashboard/generateinvestment/' + activePlanId" class="edit_btn">Generate Investment Plan</router-link>
+        </div>
       </div>
       <flex column class="col l3 flex_box_el" id="sidebar_container">
       <sidebar_dashboard v-bind:info="{planInfo, planCount}" :activePlanId.sync="activePlanId" @deletePlan="deletePlan"></sidebar_dashboard>
@@ -256,6 +259,18 @@
     min-height: 787px;
     background-color: #BFB2BF;
     padding: 0;
+  }
+
+  #investment_btn_container{
+    margin-top: 5%;
+    margin-bottom: 5%;
+  }
+
+  #investment_btn_container > a{
+    font-size:  1.5rem;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    border-radius: 10px;
   }
 
 

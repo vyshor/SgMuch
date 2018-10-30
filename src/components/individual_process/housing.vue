@@ -314,12 +314,12 @@
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === this.DONE) {
             let house_price = JSON.parse(this.responseText);
-            house_price = parseFloat(house_price['housePrice'][0]['price']).toFixed(2);
+            house_price = parseInt(house_price['housePrice'][0]['price']);
             self.house_price = house_price;
-          } else {
-            self.house_price = 800000; // dummy filler for now (because their API is down)
             self.saveToFireBase();
             self.getLoanDetails(self.prepMoneySmartURL());
+          } else {
+            self.house_price = 800000; // dummy filler for now (because their API is down)
           }
         });
 
@@ -328,7 +328,7 @@
           return;
         console.log(request_text);
 
-        xhr.open("GET", "http://microservice.dev.bambu.life/api/generalCalculator/houseCostCalculatorV2s/getHousePrice?" + request_text);
+        xhr.open("GET", "https://microservice.dev.bambu.life/api/generalCalculator/houseCostCalculatorV2s/getHousePrice?" + request_text);
 
         xhr.send(data);
       },
