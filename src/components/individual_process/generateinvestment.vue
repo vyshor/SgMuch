@@ -284,6 +284,22 @@
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send(data);
 
+      },
+      loadSavedInvestInformation: function() {
+        let self = this;
+        this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
+          function(res) {
+            const overall_data = res.data().income.income_data;
+            if (overall_data !== undefined) {
+              self.net_income = overall_data.netIncome;
+            }
+
+          }
+        ).catch( function (err) { // redirects if such plan does not exist
+            console.log(err);
+            self.$router.push('/dashboard');
+          }
+        )
       }
     },
     computed: {
@@ -315,6 +331,7 @@
       }
     },
     mounted() {
+      this.loadSavedInvestInformation();
       this.getPortfolioDetails();
 
     }

@@ -15,7 +15,7 @@
               <div class="col l8 push-l1">
                 <div class="input-field">
                   <input v-model="monthly_income" type="number" name="monthly_income" class="validate"
-                         id="monthly_income_field" step="0.01"/>
+                         id="monthly_income_field" step="0.01" min="0" oninput="validity.valid||(value='');"/>
                 </div>
                 <!--<label for="monthly_income"></label>-->
                 <input class="btn" type="Submit" value="Calculate" v-on:click="calculateIncome" id="calculate_btn"></input>
@@ -76,6 +76,7 @@
   import progressbar from "../dashboard/progressbar";
   import nextbar from "../dashboard/nextbar";
   import processFireBase from "../../mixins/processFireBase";
+  import dashboardPlansMethods from "../../mixins/dashboardPlansMethods";
 
   let GITRAW = "https://raw.githubusercontent.com/vyshor/university_expense/master/";
 
@@ -86,7 +87,7 @@
       'progressbar': progressbar,
       'nextbar': nextbar
     },
-    mixins: [processFireBase],
+    mixins: [processFireBase, dashboardPlansMethods],
 
     data() {
       return {
@@ -94,6 +95,7 @@
         plan_id: this.$route.params.plan_id,
         currentState: "income",
         currentStatus: 0,
+        planCount: 0,
         uni_checked: false,
         monthly_income: 0,
         uni_selected: 'NUS',
@@ -148,7 +150,7 @@
         if (annual_income <= 20000) {
           income_tax = 0;
         } else if (20000 < annual_income && annual_income <= 30000) {
-          income_tax = 0 + (annual_income - 20000) * (0.02);
+          income_tax = (annual_income - 20000) * (0.02);
         } else if (30000 < annual_income && annual_income <= 40000) {
           income_tax = 200 + (annual_income - 30000) * (0.035);
         } else if (40000 < annual_income && annual_income <= 80000) {
@@ -176,6 +178,34 @@
         data.income_tax = Math.floor(income_tax);
         data.net_income = Math.floor(net_income);
         return data;
+      },
+      loadSavedIncomeInformation: function() {
+        let self = this;
+        this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
+          function(res) {
+            const overall_data = res.data()[self.currentState];
+            self.currentStatus = overall_data.status;
+            const income_data = overall_data[self.currentState + '_data'];
+            if (income_data !== undefined) {
+              self.monthly_income = income_data.monthlyIncome;
+              self.annual_income = income_data.annualIncome;
+              self.income_tax = income_data.incomeTax;
+              self.net_income = income_data.netIncome;
+              self.uni_checked = income_data.estimatedBool;
+              self.uni_selected = income_data.university;
+              self.course_selected = income_data.course;
+            }
+
+            if (self.uni_checked === true) {
+              self.loadCourses();
+            }
+
+          }
+        ).catch( function (err) { // redirects if such plan does not exist
+          console.log(err);
+          self.$router.push('/dashboard');
+          }
+        )
       }
     },
     asyncComputed: {
@@ -215,6 +245,17 @@
         }
       }
 
+    },
+    mounted() {
+      this.preloadUserDetails();
+      this.loadSavedIncomeInformation();
+    },
+    beforeDestroy() {
+      // To include cases where user just create a plan, but does not save any income yet, and just quit,
+      // so then you delete the plan, cus the plan must have income for it to exist
+      if (this.currentStatus === 0) {
+        this.deletePlan(this.plan_id);
+      }
     }
   }
 

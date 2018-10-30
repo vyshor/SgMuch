@@ -187,6 +187,7 @@
       }
     },
     mounted() {
+      this.loadSavedHousingInformation();
       this.geolocate();
       this.preloadKmlToLocations();
       this.renderKml();
@@ -326,7 +327,7 @@
         const request_text = this.prepareApiInputsHousePrice(this.location_selected, this.house_type_selected); // In case if they put All or All in any of the dropdown
         if (request_text === " ")
           return;
-        console.log(request_text);
+        // console.log(request_text);
 
         xhr.open("GET", "https://microservice.dev.bambu.life/api/generalCalculator/houseCostCalculatorV2s/getHousePrice?" + request_text);
 
@@ -425,6 +426,7 @@
       printSelectedBank: function () {
         let self = this;
         const plan_id = this.plan_id;
+        this.saved_bank_details = true;
         // Save all bank details into the variables
         // Then save into firebase
         this.saveToFireBase().then(function () {
@@ -434,6 +436,27 @@
           console.log(err);
         });
       },
+      loadSavedHousingInformation: function() {
+        let self = this;
+        this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
+          function(res) {
+            const overall_data = res.data()[self.currentState];
+            self.currentStatus = overall_data.status;
+            const housing_data = overall_data[self.currentState + '_data'];
+            if (housing_data !== undefined) {
+              self.location_selected = housing_data.location;
+              self.house_type_selected = housing_data.houseType;
+              self.house_price = housing_data.housePrice;
+              // self.saved_bank_details = housing_data.loanBool;
+            }
+
+          }
+        ).catch( function (err) { // redirects if such plan does not exist
+            console.log(err);
+            self.$router.push('/dashboard');
+          }
+        )
+      }
     },
     updated() {
       this.$nextTick(function () {

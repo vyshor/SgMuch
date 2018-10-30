@@ -193,12 +193,29 @@
           }
         }
         // console.log("preload completed");
+      },
+      loadSavedExpensesInformation: function() {
+        let self = this;
+        this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
+          function(res) {
+            const overall_data = res.data()[self.currentState];
+            self.currentStatus = overall_data.status;
+            const expenses_data = overall_data[self.currentState + '_data'];
+            if (expenses_data !== undefined) {
+              self.table_data = expenses_data;
+            }
+
+          }
+        ).catch( function (err) { // redirects if such plan does not exist
+            console.log(err);
+            self.$router.push('/dashboard');
+          }
+        )
       }
     },
     mounted() {
+      this.loadSavedExpensesInformation();
       this.preloadEstimateExpense();
-      console.log(this.plan_id);
-      console.log(this.user_id);
     },
     computed: {
       saved_data: function () {

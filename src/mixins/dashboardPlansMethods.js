@@ -18,14 +18,14 @@ export default{
             incomeTax: 0,
             netIncome: 0,
             estimatedBool: false,
-            university: '',
-            course: ''
+            university: 'NUS',
+            course: 'Architecture'
           }
         },
         housing: {
           status: 0, housing_data: {
-            location: '',
-            houseType: '',
+            location: 'All',
+            houseType: 'All',
             housePrice: 0,
             loanBool: false,
             selectedBank: '',
@@ -36,8 +36,8 @@ export default{
         },
         car: {
           status: 0, car_data: {
-            brand: '',
-            model: '',
+            brand: 'BMW',
+            model: 'bmw-1-series',
             price: 0,
             loanBool: false,
             selectedBank: '',
@@ -46,7 +46,11 @@ export default{
             tenure: 0
           }
         },
-        expenses: {status: 0, expenses_data: {}}
+        expenses: {status: 0, expenses_data: [{
+            activity: "Grocery",
+            amount: 50,
+            frequency: "weekly"
+          }]}
 
       };
 
@@ -95,8 +99,14 @@ export default{
     deletePlan: function (plan_id) {
       let self = this;
       this.deletePlanFromFireBase(plan_id).then(function () {
-        Vue.delete(self.planInfo, plan_id);
+        if (self.planInfo !== undefined) {
+          Vue.delete(self.planInfo, plan_id);
+        }
         self.updateUserPlanCount(--self.planCount);
+        // redirects if delete the plan, that he is currently viewing
+        if (self.$route.path === '/dashboard/viewplan/' + plan_id) {
+          self.$router.push('/dashboard')
+        }
       }).catch(function (error) {
         console.error("Error removing document: ", error);
       });

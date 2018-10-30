@@ -235,6 +235,7 @@
       printSelectedBank: function () {
         let self = this;
         const plan_id = this.plan_id;
+        this.saved_bank_details = true;
         // console.log(this.selectedBank);
         // console.log(this.saved_data);
         // Save all bank details into the variables
@@ -299,10 +300,32 @@
           compiled_bank_details[bank] = bank_details;
         }
         return compiled_bank_details;
+      },
+      loadSavedCarInformation: function() {
+        let self = this;
+        this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
+          function(res) {
+            const overall_data = res.data()[self.currentState];
+            self.currentStatus = overall_data.status;
+            const car_data = overall_data[self.currentState + '_data'];
+            if (car_data !== undefined) {
+              self.selected_brand = car_data.brand;
+              self.selected_model = car_data.model;
+              self.calculatedPrice = car_data.price;
+              // self.saved_bank_details = car_data.loanBool;
+            }
+
+          }
+        ).catch( function (err) { // redirects if such plan does not exist
+            console.log(err);
+            self.$router.push('/dashboard');
+          }
+        )
       }
     }
     ,
     mounted() {
+      this.loadSavedCarInformation();
       this.getCarList();
       // self.$refs.car_images.reSlick();
       // console.log(this.$refs.car_images);
