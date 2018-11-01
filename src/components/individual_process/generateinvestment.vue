@@ -280,7 +280,7 @@
           }
         });
 
-        xhr.open("POST", "http://microservice.dev.bambu.life/api/graph/accumulators", true);
+        xhr.open("POST", "https://microservice.dev.bambu.life/api/graph/accumulators", true);
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send(data);
 
