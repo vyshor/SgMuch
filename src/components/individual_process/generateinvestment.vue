@@ -258,7 +258,7 @@
           }
         });
 
-        xhr.open("GET", "https://dev.bambu.life:8081/api/ModelPortfolioList");
+        xhr.open("GET", 'https://cors-anywhere.herokuapp.com/' + "http://dev.bambu.life:8081/api/ModelPortfolioList");
         xhr.send(data);
       },
       getGraphData: function () {
