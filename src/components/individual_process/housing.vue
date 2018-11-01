@@ -277,7 +277,7 @@
           this.infoCurrentKey = idx;
         }
       },
-      updateHouseTypes: function () {
+      updateHouseTypes: function (auto_select_first=false) {
         const location_selected = this.location_selected;
         let self = this;
         $.ajax(GITRAW + "Python/house_locations/" + location_selected + ".json", {
@@ -287,6 +287,18 @@
               for (let house_type of house_types) {
                 self.house_types.push(house_type);
               } // push them so that dropdown bar is updated
+
+              if (auto_select_first) {
+                if (self.house_type_selected === 'All') { // Auto selects a valid location other than All
+                  for (let house_type of house_types) {
+                    if (house_type !== 'All') {
+                      self.house_type_selected = house_type;
+                      break;
+                    }
+                  }
+                  self.getHousePrice();
+                }
+              }
             }
           }
         );
@@ -305,8 +317,23 @@
           }
         );
       },
-      getHousePrice: function (e) {
-        e.preventDefault();
+      getHousePrice: function (e=null) {
+        if (e !== null) {
+          e.preventDefault();
+        }
+        if (this.location_selected === 'All') { // Auto selects a valid location other than All
+          for (let location of this.locations) {
+            if (location !== 'All') {
+              this.location_selected = location;
+              break;
+            }
+          }
+        }
+        if (this.house_type_selected === 'All') {
+          this.updateHouseTypes(true);
+        }
+
+
         let self = this;
         let data = JSON.stringify(false);
         let xhr = new XMLHttpRequest();

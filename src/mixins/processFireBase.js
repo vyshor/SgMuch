@@ -1,13 +1,18 @@
 import firebase from 'firebase';
 
 export default {
+  data() {
+    return {
+      db: null
+    }
+  },
   methods: {
     postToFireBase: function (uid, plan_id, process_name, process_data, new_status) {
-      let db = firebase.firestore();
-
-      db.settings({
-        timestampsInSnapshots: true
-      });
+      // let db = firebase.firestore();
+      //
+      // db.settings({
+      //   timestampsInSnapshots: true
+      // });
 
       let process_details = {
         status: new_status,
@@ -15,15 +20,15 @@ export default {
       };
 
       this.updateSavedDate(uid, plan_id);
-      return db.collection('users').doc('' + uid).collection("saved_plans").doc(plan_id).update({[process_name]: process_details});
+      return this.db.collection('users').doc('' + uid).collection("saved_plans").doc(plan_id).update({[process_name]: process_details});
     },
     loadPlanFromFireBase: function (uid, plan_id) {
-      let db = firebase.firestore();
-      let docRef = db.collection("users").doc(uid).collection("saved_plans").doc(plan_id);
+      // let db = firebase.firestore();
+      let docRef = this.db.collection("users").doc(uid).collection("saved_plans").doc(plan_id);
 
-      db.settings({
-        timestampsInSnapshots: true
-      });
+      // db.settings({
+      //   timestampsInSnapshots: true
+      // });
 
       return docRef.get(); // return the promise
     },
@@ -33,54 +38,62 @@ export default {
       return this.postToFireBase(this.user_id, this.plan_id, this.currentState, this.saved_data, this.currentStatus);
     },
     getUserDetails: function() {
-      let db = firebase.firestore();
+      // let db = firebase.firestore();
+      //
+      // db.settings({
+      //   timestampsInSnapshots: true
+      // });
 
-      db.settings({
-        timestampsInSnapshots: true
-      });
-
-      let docRef = db.collection("users").doc(this.user_id);
+      let docRef = this.db.collection("users").doc(this.user_id);
       return docRef.get(); // return the promise
     },
     updateUserDetails: function(name, email) {
-      let db = firebase.firestore();
+      // let db = firebase.firestore();
       let updated_data = {
         name: name,
         email: email
       };
-      return db.collection('users').doc(this.user_id).update(updated_data); // return promise
+      return this.db.collection('users').doc(this.user_id).update(updated_data); // return promise
     },
     updateUserPlanCount: function(planCount) {
-      let db = firebase.firestore();
+      // let db = firebase.firestore();
       let updated_data = {
         planCount: planCount
       };
-      db.collection('users').doc(this.user_id).update(updated_data);
+      this.db.collection('users').doc(this.user_id).update(updated_data);
     },
     updateSavedDate: function(uid, plan_id){
-      let db = firebase.firestore();
-      db.collection('users').doc('' + uid).collection("saved_plans").doc(plan_id).update({lastSaved: Date.now()});
+      // let db = firebase.firestore();
+      this.db.collection('users').doc('' + uid).collection("saved_plans").doc(plan_id).update({lastSaved: Date.now()});
     },
     getAllPlansFromFireBase: function() {
-      let db = firebase.firestore();
-      db.settings({
-        timestampsInSnapshots: true
-      });
-      return db.collection("users").doc(this.user_id).collection("saved_plans").get(); // return promise of all the documents
+      // let db = firebase.firestore();
+      // db.settings({
+      //   timestampsInSnapshots: true
+      // });
+      return this.db.collection("users").doc(this.user_id).collection("saved_plans").get(); // return promise of all the documents
     },
     deletePlanFromFireBase: function(plan_id) {
-      let db = firebase.firestore();
-      return db.collection("users").doc(this.user_id).collection("saved_plans").doc(plan_id).delete(); // return promise
+      // let db = firebase.firestore();
+      return this.db.collection("users").doc(this.user_id).collection("saved_plans").doc(plan_id).delete(); // return promise
     },
     getPlanDetailsFromFireBase: function(plan_id) {
-      let db = firebase.firestore();
-      db.settings({
-        timestampsInSnapshots: true
-      });
+      // let db = firebase.firestore();
+      // db.settings({
+      //   timestampsInSnapshots: true
+      // });
 
-      let docRef = db.collection("users").doc(this.user_id).collection("saved_plans").doc(plan_id);
+      let docRef = this.db.collection("users").doc(this.user_id).collection("saved_plans").doc(plan_id);
       return docRef.get(); // return the promise
     }
 
+  },
+  created() {
+    this.db = firebase.firestore();
+
+    this.db.settings({
+      timestampsInSnapshots: true
+    });
   }
+
 }

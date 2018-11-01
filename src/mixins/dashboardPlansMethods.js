@@ -83,8 +83,10 @@ export default{
     preloadPlanDetails: function () {
       let self = this;
       this.getAllPlansFromFireBase().then(function (querySnapshot) {
+        let planCount = 0;
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
+          planCount++;
           let planDetails = doc.data();
           self.planInfo = Object.assign({}, self.planInfo, {
             [doc.id]:
@@ -94,6 +96,8 @@ export default{
               }
           });
         });
+        self.planCount = planCount; // extra update planCount, in case abusers decides to quickly maneuver across url which breaks planCount
+        self.updateUserPlanCount(planCount);
       });
     },
     deletePlan: function (plan_id) {

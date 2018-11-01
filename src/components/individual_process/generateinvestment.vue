@@ -152,6 +152,7 @@
         annual_expense: '',
         investment_period: 10,
         annual_investment: 10000,
+        rendered_status: false, // to check if the initial portfolio breakdown is rendered already or not
         show_portfolio: false,
         portfolio_idx: 5,
         portfolio_breakdown: [],
@@ -211,6 +212,7 @@
         this.show_portfolio = !this.show_portfolio;
       },
       getBreakdownPortfolio: function () {
+        if (!this.rendered_status) return; // terminates if it is portfolio details not rendered yet
         let self = this;
         let portfolio_idx = this.portfolio_idx;
         let data = JSON.stringify(false);
@@ -252,6 +254,7 @@
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === this.DONE) {
             self.portfolio_details = JSON.parse(this.responseText);
+            self.rendered_status = true;
             // Run initialising functions to render at least some information
             self.getGraphData();
             self.getBreakdownPortfolio();
@@ -262,6 +265,7 @@
         xhr.send(data);
       },
       getGraphData: function () {
+        if (!this.rendered_status) return; // terminates if it is portfolio details not rendered yet
         let self = this;
         let data = this.prepareAccumulationApiInput(this.portfolio_idx, this.investment_period, this.annual_investment);
         let xhr = new XMLHttpRequest();

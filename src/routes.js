@@ -14,6 +14,7 @@ import expenses from './components/individual_process/expenses.vue'
 import profile from './components/profile/profile.vue'
 import viewplan from './components/dashboard/viewplan.vue'
 import generateinvestment from './components/individual_process/generateinvestment.vue'
+import page404 from './components/dashboard/page404.vue'
 
 Vue.use(Router);
 
@@ -106,6 +107,11 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/secret',
+      name: 'Page404',
+      component: page404
     }
   ],
 mode: 'history'
@@ -116,8 +122,8 @@ router.beforeEach((to, from, next) => {
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   // console.log(currentUser.uid);
 
-  if (requiresAuth && !currentUser) next('login');
-  else if ((to.name === "Login" || to.name === "SignUp") && currentUser) next('dashboard');
+  if (requiresAuth && !currentUser) next('/');
+  else if ((to.name === "Homepage" || to.name === "Login" || to.name === "SignUp") && currentUser) next('dashboard');
   else if (!requiresAuth && currentUser ) next();
   else next()
 });
