@@ -23,10 +23,11 @@
             <label for="password" class="col l2 push-l3">Password</label>
             <div class="input-field col l4 push-l3">
               <input type="password" name="password" v-model="password" id="password" class="validate">
-              <meter max="4" id="password-strength-meter"></meter>
+              <meter max="4" id="password-strength-meter" v-bind:value="meter_value"></meter>
               <div id="password-strength-text-container">
-                <p id="password-strength-text"></p>
+                <p id="password-strength-text">{{ password_strength }}</p>
               </div>
+              <span class="col l12 error_message" v-if="error_message">{{ error_message }}</span>
               <vue-recaptcha
                 ref="recaptcha"
                 @verify="onCaptchaVerified"
@@ -58,58 +59,79 @@
         name: '',
         email: '',
         password: '',
-        recaptchaBool: false
-
+        recaptchaBool: false,
+        strength: {
+          0: "Worst",
+          1: "Bad",
+          2: "Weak",
+          3: "Good",
+          4: "Strong"
+        },
+        password_score: '',
+        error_message: ''
+      }
+    },
+    computed: {
+      meter_value: function() {
+        return zxcvbn(this.password).score;
+      },
+      password_strength: function() {
+        if (this.password !== "") {
+          return "Strength: " + this.strength[this.meter_value];
+        } else {
+          return "";
+        }
       }
     },
 
     mounted() {
-      var strength = {
-        0: "Worst",
-        1: "Bad",
-        2: "Weak",
-        3: "Good",
-        4: "Strong"
-      };
-
-      var password = document.getElementById('password');
-      var meter = document.getElementById('password-strength-meter');
-      var text = document.getElementById('password-strength-text');
-
-      password.addEventListener('input', function () {
-        var val = password.value;
-        var result = zxcvbn(val);
-
-        // Update the password strength meter
-        meter.value = result.score;
-
-        // Update the text indicator
-        if (val !== "") {
-          text.innerHTML = "Strength: " + strength[result.score];
-        } else {
-          text.innerHTML = "";
-        }
-      });
     },
 
     methods: {
       signUp: function (e) {
         e.preventDefault();
+        let self = this;
+        this.error_message = "";
+        // Check if input fields are empty : Please check your input. All must be filled
+        if (this.name === "" || this.email === "" || this.password === "") {
+          self.error_message = "Please check your input. All fields must be filled";
+          return;
+        } else if (this.meter_value <= 2) {
+          self.error_message = "Please choose a stronger password";
+          return;
+        } else if (this.recaptchaBool === false) {
+          self.error_message = "Please tick reCAPTCHA checkbox";
+          return;
+        }
+        // If the strength/meter value is 2 and below, reject : Please choose a stronger password
+
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
           (user) => {
-            this.$router.replace('dashboard');
             // console.log(user.user.uid);
 
             const uid = user.user.uid;
-            const name = this.name;
-            const email = this.email;
-            const password = this.password;
-            this.post(uid, name, email, password);
+            const name = self.name;
+            const email = self.email;
+            const password = self.password;
+            self.post(uid, name, email, password);
+
+            self.$router.replace('dashboard');
           },
           (err) => {
-            alert("Oops. " + err.message);
+            // alert("Oops. " + err.message);
+            console.log(err);
+
+            if (err.code === "auth/weak-password") {
+              self.error_message = "Password should at least be 6 characters";
+            } else if (err.code === "auth/weak-password") {
+              self.error_message = "You are already registered under our system";
+              // auth/weak-password : Password should at least be 6 characters
+              // auth/email-already-in-use : You are already registered under our system.
+            } else if (err.code === "auth/invalid-email") {
+              self.error_message = "Please check your input. Please enter a valid email"
+            }
           }
-        )
+        );
       },
       post: function (uid, name, email, password) {
         var db = firebase.firestore();
@@ -189,6 +211,12 @@
 
   #password-strength-text-container {
     height: 20px;
+  }
+
+  .error_message {
+    font-size: 1.2rem;
+    font-family: 'Arial';
+    color: red;
   }
 
 </style>
