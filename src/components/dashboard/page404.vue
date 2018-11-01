@@ -22,7 +22,7 @@
 <style scoped>
   #dashboard_main {
     margin-bottom: 0;
-    background: url('../../assets/meerkat.jpg')
+    background-image: url('../../assets/meerkat.jpg')
   }
 
   p {
