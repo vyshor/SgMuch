@@ -112,6 +112,10 @@ let router = new Router({
       path: '/secret',
       name: 'Page404',
       component: page404
+    },
+    {
+      path: '*',
+      redirect: '/secret'
     }
   ],
 mode: 'history'
