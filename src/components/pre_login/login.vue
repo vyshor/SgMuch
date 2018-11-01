@@ -17,6 +17,8 @@
             <div class="input-field col l4 push-l3">
               <input v-model="password" type="password" name="password" id="password_field" class="validate"/>
             </div>
+            <router-link to="/signup" class="col l12 error_message" v-if="no_account_message">{{ no_account_message }}</router-link>
+            <p class="col l12 error_message" v-if="error_message">{{ error_message }}</p>
           </div>
           <input class="btn btn-large grey_btn" type="Submit" value="Login" v-on:click="signIn"></input>
         </form>
@@ -35,18 +37,30 @@
       return {
         image,
         email: 'hara@hara.com',
-        password: 'dingdong'
+        password: 'dingdong',
+        no_account_message: '',
+        error_message: ''
       }
     },
     methods: {
       signIn: function(e) {
         e.preventDefault();
+        let self = this;
+        this.no_account_message = "";
+        this.error_message = "";
         firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
           (user) => {
             this.$router.replace('dashboard')
           },
           (err) => {
-            alert('Oops. ' + err.message)
+            // console.log(err);
+            // alert('Oops. ' + err.message)
+            if (err.code === 'auth/user-not-found') {
+              // no such account
+              self.no_account_message = "Account does not exist. Sign up?";
+            } else if (err.code === "auth/wrong-password") {
+              self.error_message = "Error! Please check your input";
+            }
           }
         )
       }
@@ -98,5 +112,11 @@
 
   form {
     padding-top: 10%;
+  }
+
+  .error_message {
+    font-size: 1.2rem;
+    font-family: 'Arial';
+    color: red;
   }
 </style>
