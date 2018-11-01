@@ -227,7 +227,7 @@
             }
           }
         });
-        xhr.open("GET", "https://dev.bambu.life:8081/api/ModelPortfolioProductBreakdown/" + portfolio_idx);
+        xhr.open("GET", 'https://cors-anywhere.herokuapp.com/' + "http://dev.bambu.life:8081/api/ModelPortfolioProductBreakdown/" + portfolio_idx);
         xhr.send(data);
       },
       prepareAccumulationApiInput: function (portfolio_idx, investment_period, annual_investment) {
@@ -258,7 +258,7 @@
           }
         });
 
-        xhr.open("GET", "http://dev.bambu.life:8081/api/ModelPortfolioList");
+        xhr.open("GET", "https://dev.bambu.life:8081/api/ModelPortfolioList");
         xhr.send(data);
       },
       getGraphData: function () {
@@ -399,7 +399,7 @@
   }
 
   #back_btn_container {
-    margin-top: -1.5%;
+    margin-top: -2%;
   }
 
   .slider_container {
