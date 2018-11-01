@@ -10,8 +10,8 @@
         <div class="col push-l2 l4">
           <h5>STAY CONNECTED</h5>
           <p>Email: sgmuch18@gmail.com<br>
-            Office No.: +65 6123 4567<br>
-            Office Hours ( 8 am to 6 pm) </p>
+            Office No.: +65 6790 5786<br>
+            Office Hours ( 8:45 am to 5:45 pm) </p>
         </div>
 
         </div>
