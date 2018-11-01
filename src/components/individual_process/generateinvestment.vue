@@ -227,7 +227,7 @@
             }
           }
         });
-        xhr.open("GET", "http://dev.bambu.life:8081/api/ModelPortfolioProductBreakdown/" + portfolio_idx);
+        xhr.open("GET", "https://dev.bambu.life:8081/api/ModelPortfolioProductBreakdown/" + portfolio_idx);
         xhr.send(data);
       },
       prepareAccumulationApiInput: function (portfolio_idx, investment_period, annual_investment) {
