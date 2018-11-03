@@ -35,7 +35,22 @@
           </div>
           <div class="row">
             <p class="col l4 info_text">Price:</p>
-            <p class="col l6" id="car_price">S$ {{ calculatedPrice.toLocaleString() }}</p>
+            <p class="col l6" id="car_price" v-if="!car_price_loading">S$ {{ calculatedPrice.toLocaleString() }}</p>
+            <div class="col l6" v-else>
+              <div class="preloader-wrapper small active left">
+                <div class="spinner-layer spinner-blue-only">
+                  <div class="circle-clipper left">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="gap-patch">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="circle-clipper right">
+                    <div class="circle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="row">
             <input class="btn color_btn" type="Submit" value="Get Price" v-on:click="getPrice"
@@ -43,7 +58,7 @@
           </div>
         </form>
       </div>
-      <div id="bank_details_container" v-if="show_bank_details >= 1" class="container center">
+      <div id="bank_details_container" v-if="show_bank_details >= 1 && !bank_loading" class="container center">
         <!--<div id="bank_details_container" class="container center">-->
         <slick class="" ref="bank_details_slider" :options="slickOptions" @afterChange="handleAfterChangeBank">
           <div class="card" v-for="(details, bank) of all_bank_details">
@@ -63,6 +78,12 @@
           </div>
 
         </slick>
+      </div>
+      <div class="container center row" v-else-if="bank_loading">
+        <p class="animated pulse infinite loading_text">Loading Housing Loan Details...</p>
+        <div class="progress">
+          <div class="indeterminate"></div>
+        </div>
       </div>
 
     </div>
@@ -105,6 +126,8 @@
         model_list: [],
         selected_model: '',
         calculatedPrice: '',
+        bank_loading: false,
+        car_price_loading: false,
         show_bank_details: 0, // 0 means do not show, 1 means it is ready to be rendered, 2 means rendered to screen already
         saved_bank_details: false,
         all_bank_details: {},
@@ -150,11 +173,13 @@
         let xhr = new XMLHttpRequest();
         // xhr.withCredentials = true;
         let self = this;
+        this.car_price_loading = true;
 
         xhr.addEventListener("readystatechange", function () {
           if (Math.floor(this.status/100) === 5) { // internal server error status
             console.log("API server down. Using some random value as dummy values");
             self.calculatedPrice = Math.floor(Math.random() * 50000 + 20000);
+            self.car_price_loading = false;
 
             self.saveToFireBase();
             self.getLoanDetails(self.prepMoneySmartURL());
@@ -165,6 +190,7 @@
             let reply_data = JSON.parse(this.responseText);
             // console.log(reply_data);
             self.calculatedPrice = parseInt(parseFloat(reply_data['carPrice'][0]['carprice']) * 0.042);
+            self.car_price_loading = false;
             self.saveToFireBase();
             self.getLoanDetails(self.prepMoneySmartURL());
             self.updateCarousel(); // this needed to inserted at the back because the updating of carousel will
@@ -183,6 +209,7 @@
         let self = this;
         // xhr.withCredentials = true;
 
+        this.bank_loading = true;
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === this.DONE) {
             let loan_info = JSON.parse(this.responseText);
@@ -199,6 +226,7 @@
               self.all_bank_details = Object.assign({}, self.all_bank_details, {[key]: value});
             }
             self.selectedBank_idx = 0; // init to highlight the centre choice by default
+            self.bank_loading = false;
           }
         });
 
@@ -510,6 +538,12 @@
     width: 100%;
     position: absolute;
     bottom: 0;
+  }
+
+  .loading_text {
+    font-family: 'Helvetica Rounded';
+    font-weight: bold;
+    font-size: 1.5rem;
   }
 
 

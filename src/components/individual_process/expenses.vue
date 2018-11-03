@@ -18,7 +18,7 @@
             <p class="col l4 info_text">Amount:</p>
             <div class="input-field col l6">
               <input v-model="amount" type="number" name="amount" id="amount_field" class="validate" step="0.01"
-                     aria-required="true"/>
+                     aria-required="true" oninput="validity.valid||(value='');"/>
               <label for="amount_field">S$</label>
             </div>
           </div>
@@ -37,11 +37,28 @@
             <input class="btn color_btn" type="Submit" value="Add to list" v-on:click="addEntry" id="add_to_list_btn"/>
           </div>
         </form>
-        <div class="container center">
-          <button class="btn color_btn" type="Submit" v-on:click="estimateExpense" id="estimate_btn"><i
-            class="large material-icons">add_shopping_cart</i>Estimate
-            based on income
-          </button>
+        <div class="container center row">
+          <div class="col l6 push-l2">
+            <button class="btn color_btn" type="Submit" v-on:click="estimateExpense" id="estimate_btn"><i
+              class="large material-icons">add_shopping_cart</i>Estimate
+              based on income
+            </button>
+          </div>
+          <div class="col l1 push-l1 " v-if="estimate_expense_loading">
+            <div class="preloader-wrapper small active">
+              <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                  <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                  <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                  <div class="circle"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div id="data_area" class="row container">
@@ -109,6 +126,7 @@
         activity: '',
         amount: '',
         frequency: 'daily',
+        estimate_expense_loading: false,
         table_data: [{
           activity: "Grocery",
           amount: 50,
@@ -143,8 +161,10 @@
         this.frequency = 'daily';
       },
       estimateExpense() {
+        this.estimate_expense_loading = true;
         if (this.preloaded_estimated_data.length) {
           this.table_data = this.table_data.concat(this.preloaded_estimated_data);
+          this.estimate_expense_loading = false;
           this.saveToFireBase();
         }
       },
@@ -193,11 +213,14 @@
           }
         }
         // console.log("preload completed");
+        if (this.estimate_expense_loading) { // if user did click before it was preloaded
+          this.estimateExpense();
+        }
       },
-      loadSavedExpensesInformation: function() {
+      loadSavedExpensesInformation: function () {
         let self = this;
         this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
-          function(res) {
+          function (res) {
             const overall_data = res.data()[self.currentState];
             self.currentStatus = overall_data.status;
             const expenses_data = overall_data[self.currentState + '_data'];
@@ -206,16 +229,16 @@
             }
 
           }
-        ).catch( function (err) { // redirects if such plan does not exist
+        ).catch(function (err) { // redirects if such plan does not exist
             console.log(err);
             self.$router.push('/dashboard');
           }
         )
       },
-      preloadSavedMonthlyIncomeInformation: function() {
+      preloadSavedMonthlyIncomeInformation: function () {
         let self = this;
         this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
-          function(res) {
+          function (res) {
             const overall_data = res.data().income.income_data;
             if (overall_data !== undefined) {
               const monthly_income = overall_data.monthlyIncome;
@@ -223,7 +246,7 @@
             }
 
           }
-        ).catch( function (err) { // redirects if such plan does not exist
+        ).catch(function (err) { // redirects if such plan does not exist
             console.log(err);
             self.$router.push('/dashboard');
           }

@@ -58,7 +58,22 @@
           </div>
           <div class="row">
             <p class="col l4 info_text">House Price:</p>
-            <p class="col l6" id="house_price">S$ {{ house_price.toLocaleString() }}</p>
+            <p class="col l6" id="house_price" v-if="!house_price_loading">S$ {{ house_price.toLocaleString() }}</p>
+            <div class="col l6" v-else>
+              <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-blue-only">
+                  <div class="circle-clipper left">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="gap-patch">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="circle-clipper right">
+                    <div class="circle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="row">
             <p class="col l4 info_text">Loan Period:</p>
@@ -76,7 +91,7 @@
           </div>
         </div>
       </div>
-      <div id="bank_details_container" v-if="show_bank_details >= 1" class="container center row">
+      <div id="bank_details_container" v-if="show_bank_details >= 1 && !bank_loading" class="container center row">
         <!--<div id="bank_details_container" class="container center">-->
         <slick class="" ref="bank_details_slider" :options="slickOptions" @afterChange="handleAfterChangeBank">
           <div class="card" v-for="(details, bank) of all_bank_details">
@@ -97,6 +112,12 @@
           </div>
 
         </slick>
+      </div>
+      <div class="container center row" v-else-if="bank_loading">
+        <p class="animated pulse infinite loading_text">Loading Housing Loan Details...</p>
+        <div class="progress">
+          <div class="indeterminate"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -140,6 +161,8 @@
         loan_period: 10,
         show_bank_details: 0, // 0 means do not show, 1 means it is ready to be rendered, 2 means rendered to screen already
         saved_bank_details: false,
+        bank_loading: false,
+        house_price_loading: false,
         all_bank_details: {},
         selectedBank_idx: -1,
         slickOptions: {
@@ -191,8 +214,6 @@
       this.geolocate();
       this.preloadKmlToLocations();
       this.renderKml();
-      this.updateHouseTypes(this.location_selected);
-      this.updateLocations(this.house_type_selected);
 
       // Had to do this, because slick creates separate new element that vue css cant touch
       $("<style>.slick-arrow:before { color: #272A43 !important; }</style>").appendTo("head");
@@ -277,7 +298,7 @@
           this.infoCurrentKey = idx;
         }
       },
-      updateHouseTypes: function (auto_select_first=false) {
+      updateHouseTypes: function (auto_select_first = false) {
         const location_selected = this.location_selected;
         let self = this;
         $.ajax(GITRAW + "Python/house_locations/" + location_selected + ".json", {
@@ -317,7 +338,7 @@
           }
         );
       },
-      getHousePrice: function (e=null) {
+      getHousePrice: function (e = null) {
         if (e !== null) {
           e.preventDefault();
         }
@@ -338,11 +359,12 @@
         let data = JSON.stringify(false);
         let xhr = new XMLHttpRequest();
         // xhr.withCredentials = true;
-
+        this.house_price_loading = true;
         xhr.addEventListener("readystatechange", function () {
-          if (Math.floor(this.status/100) === 5) { // internal server error status
+          if (Math.floor(this.status / 100) === 5) { // internal server error status
             console.log("API server down. Using some random value as dummy values");
             self.house_price = Math.floor(Math.random() * 200000 + 600000);
+            self.house_price_loading = false;
 
             self.saveToFireBase();
             self.getLoanDetails(self.prepMoneySmartURL());
@@ -352,6 +374,8 @@
             let house_price = JSON.parse(this.responseText);
             house_price = parseInt(house_price['housePrice'][0]['price']);
             self.house_price = house_price;
+            self.house_price_loading = false;
+
             self.saveToFireBase();
             self.getLoanDetails(self.prepMoneySmartURL());
           } else {
@@ -397,6 +421,7 @@
         let loan_period = this.loan_period;
         // xhr.withCredentials = true;
 
+        this.bank_loading = true;
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === this.DONE) {
             let loan_info = JSON.parse(this.responseText);
@@ -413,6 +438,7 @@
               self.all_bank_details = Object.assign({}, self.all_bank_details, {[key]: value});
             }
             self.selectedBank_idx = 0; // init to highlight the centre choice by default
+            self.bank_loading = false;
           }
         });
 
@@ -471,10 +497,10 @@
           console.log(err);
         });
       },
-      loadSavedHousingInformation: function() {
+      loadSavedHousingInformation: function () {
         let self = this;
         this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
-          function(res) {
+          function (res) {
             const overall_data = res.data()[self.currentState];
             self.currentStatus = overall_data.status;
             const housing_data = overall_data[self.currentState + '_data'];
@@ -483,10 +509,13 @@
               self.house_type_selected = housing_data.houseType;
               self.house_price = housing_data.housePrice;
               // self.saved_bank_details = housing_data.loanBool;
+
+              self.updateHouseTypes(self.location_selected);
+              self.updateLocations(self.house_type_selected);
             }
 
           }
-        ).catch( function (err) { // redirects if such plan does not exist
+        ).catch(function (err) { // redirects if such plan does not exist
             console.log(err);
             self.$router.push('/dashboard');
           }
@@ -514,23 +543,23 @@
           loanPeriod: this.picked_loan_period
         }
       },
-      selected_bank: function() {
-        if (this.selectedBank_idx !== -1 ) {
+      selected_bank: function () {
+        if (this.selectedBank_idx !== -1) {
           return Object.keys(this.all_bank_details)[this.selectedBank_idx]
         } else return '';
       },
-      interest_rate: function() {
-        if (this.selectedBank_idx !== -1 ) {
+      interest_rate: function () {
+        if (this.selectedBank_idx !== -1) {
           return this.all_bank_details[this.selected_bank].interest_rate;
         } else return 0;
       },
-      monthly_repay: function() {
-        if (this.selectedBank_idx !== -1 ) {
+      monthly_repay: function () {
+        if (this.selectedBank_idx !== -1) {
           return this.all_bank_details[this.selected_bank].monthly_repay;
         } else return 0;
       },
-      picked_loan_period: function() {
-        if (this.selectedBank_idx !== -1 ) {
+      picked_loan_period: function () {
+        if (this.selectedBank_idx !== -1) {
           return this.all_bank_details[this.selected_bank].loan_period;
         } else return 0;
       }
@@ -632,7 +661,6 @@
     background-color: #272A43;
   }
 
-
   .slick-slide.slick-current.slick-active > div > div.card {
     border: 4px #FF39E5 solid;
   }
@@ -646,7 +674,6 @@
     color: #FF39E5;
   }
 
-
   .card {
     min-height: 320px;
   }
@@ -655,6 +682,12 @@
     width: 100%;
     position: absolute;
     bottom: 0;
+  }
+
+  .loading_text {
+    font-family: 'Helvetica Rounded';
+    font-weight: bold;
+    font-size: 1.5rem;
   }
 
 

@@ -10,11 +10,41 @@
         <p class="col l7 info_text">
           Annual Net Income:
         </p>
-        <p class="col l5 data_text">S$ {{ net_income.toLocaleString() }}</p>
+        <p class="col l5 data_text" v-if="net_income">S$ {{ net_income.toLocaleString() }}</p>
+        <div class="col l5" v-else>
+          <div class="preloader-wrapper small active left">
+            <div class="spinner-layer spinner-green-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div>
+              <div class="gap-patch">
+                <div class="circle"></div>
+              </div>
+              <div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <p class="col l7 info_text">
           Annual Estimated Expenses:
         </p>
-        <p class="col l5 data_text">S$ {{ annual_expense.toLocaleString() }}</p>
+        <p class="col l5 data_text" v-if="annual_expense">S$ {{ annual_expense.toLocaleString() }}</p>
+        <div class="col l5" v-else>
+          <div class="preloader-wrapper small active left">
+            <div class="spinner-layer spinner-blue-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div>
+              <div class="gap-patch">
+                <div class="circle"></div>
+              </div>
+              <div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="container row infobox">
         <div class="col l6 row">
@@ -98,7 +128,7 @@
           />
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="rendered_status">
         <div class="col l6">
           <p class="center graph_title">Accumulated Amount</p>
           <GChart
@@ -118,6 +148,12 @@
           />
         </div>
 
+      </div>
+      <div class="row center container" v-else>
+        <p class="animated pulse infinite loading_text">Retrieving Portfolio Details...</p>
+        <div class="progress">
+          <div class="indeterminate"></div>
+        </div>
       </div>
 
     </div>
@@ -497,6 +533,12 @@
 
   .graph_title {
     margin: 0;
+    font-family: 'Helvetica Rounded';
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  .loading_text {
     font-family: 'Helvetica Rounded';
     font-weight: bold;
     font-size: 1.5rem;
