@@ -7,14 +7,27 @@
       <a class="col l2 push-l7 btn btn-large" v-if="!(incomeActive)">Skip</a>
     </router-link>
     <router-link v-bind:to="rightPath" v-bind:class="{ disabled : !(rightPath)}">
-    <i class="material-icons col l1 push-l10 large" id="right_arrow" v-if="incomeActive">arrow_forward</i>
-    <i class="material-icons col l1 push-l8 large" id="right_arrow" v-else>arrow_forward</i>
+      <i class="material-icons col l1 push-l10 large" id="right_arrow" v-if="incomeActive">arrow_forward</i>
+      <i class="material-icons col l1 push-l8 large" id="right_arrow" v-else>arrow_forward</i>
     </router-link>
   </div>
 </template>
 
 <script>
+  import firebase from 'firebase';
+  import processFireBase from "../../mixins/processFireBase";
+  import dashboardPlansMethods from "../../mixins/dashboardPlansMethods";
+
   export default {
+    mixins: [processFireBase, dashboardPlansMethods],
+    data() {
+      return {
+        user_id: firebase.auth().currentUser.uid,
+        planCount: 0,
+        currentPlan: "",
+        currentProgress: ""
+      }
+    },
     props: {
       info: {
         currentState: 'currentState',
@@ -37,14 +50,29 @@
         return this.info.currentState === "expenses"
       },
       leftPath: function () {
-        if (this.info.path[1] !== "invalid") return this.info.path[1] + '/'+ this.info.plan_id; else return '';
+        if (this.info.path[1] !== "invalid") return this.info.path[1] + '/' + this.info.plan_id; else return '';
       },
       rightPath: function () {
-        if (this.info.path[0] !== "invalid" && (this.info.currentStatus)) return this.info.path[0] + '/'+ this.info.plan_id; else return '';
+        if (this.info.path[0] !== "invalid" && (this.info.currentStatus)) return this.info.path[0] + '/' + this.info.plan_id; else return '';
       },
       skipPath: function () {
-        if (this.info.path[2] !== "invalid") return this.info.path[2] + '/'+ this.info.plan_id; else return '';
+        if (this.info.path[2] !== "invalid") return this.info.path[2] + '/' + this.info.plan_id; else return '';
+      },
+      plan_id: function () {
+        return this.info.plan_id;
+      },
+      currentState: function () {
+        return this.info.currentState;
       }
+    },
+    mounted() {
+      this.preloadUserDetails();
+    },
+    updated() {
+      // console.log("update");
+      // console.log(this.currentPlan);
+      // console.log(this.currentProgress);
+      this.updateCurrentProgressInProcess();
     }
   }
 </script>

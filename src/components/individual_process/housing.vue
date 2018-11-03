@@ -309,7 +309,7 @@
                 self.house_types.push(house_type);
               } // push them so that dropdown bar is updated
 
-              if (auto_select_first) {
+              if (typeof(auto_select_first) === "boolean" && auto_select_first) {
                 if (self.house_type_selected === 'All') { // Auto selects a valid location other than All
                   for (let house_type of house_types) {
                     if (house_type !== 'All') {

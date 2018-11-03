@@ -80,7 +80,7 @@
         </slick>
       </div>
       <div class="container center row" v-else-if="bank_loading">
-        <p class="animated pulse infinite loading_text">Loading Housing Loan Details...</p>
+        <p class="animated pulse infinite loading_text">Loading Car Loan Details...</p>
         <div class="progress">
           <div class="indeterminate"></div>
         </div>

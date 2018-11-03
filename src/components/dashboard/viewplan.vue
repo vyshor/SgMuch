@@ -123,6 +123,8 @@
       return {
         user_id: firebase.auth().currentUser.uid,
         planCount: 0,
+        currentPlan: '',
+        currentProgress: '',
         planInfo: {},
         activePlanId: this.$route.params.plan_id,
         activePlanDetails: {},
@@ -150,18 +152,23 @@
       this.preloadUserDetails();
       this.preloadPlanDetails();
       this.preloadPickedPlanDetails();
+
     },
     watch: {
       '$route'(to, from) {
         this.activePlanId = this.$route.params.plan_id;
         this.doneLoading = false;
         this.preloadPickedPlanDetails();
+
       }
     },
     computed: {
       table_data: function () {
         return this.activePlanDetails.expenses.expenses_data;
       }
+    },
+    updated() {
+      this.finishCurrentPlan();
     }
   }
 </script>

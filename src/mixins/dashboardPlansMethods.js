@@ -4,6 +4,10 @@ import Vue from 'vue'; // needed for dashboardPlansMethods mixins
 export default{
   methods: {
     startNewPlan: function () {
+      if (this.currentPlan !== '' && this.currentProgress !== '') { // not null means there is unfinished plan
+        this.$router.push({path: `/dashboard/${this.currentProgress}/${this.currentPlan}`});
+        return;
+      }
       if (this.planCount >= 3) {
         alert("The maximum number of plans has been reached. Delete an existing plan to continue.");
         return;
@@ -73,6 +77,8 @@ export default{
         expenses: emptyProcesses["expenses"],
       }).then(function () {
         self.updateUserPlanCount(++self.planCount);
+        self.updateCurrentPlan(plan_id);
+        self.updateCurrentProgress("income");
         self.$router.push({path: `/dashboard/income/${plan_id}`})
       });
 
@@ -83,6 +89,8 @@ export default{
       this.getUserDetails().then(function (res) {
         const details = res.data();
         self.planCount = details["planCount"];
+        self.currentPlan = details["currentPlan"];
+        self.currentProgress = details["currentProgress"];
       });
     },
     preloadPlanDetails: function () {
@@ -112,6 +120,14 @@ export default{
           Vue.delete(self.planInfo, plan_id);
         }
         self.updateUserPlanCount(--self.planCount);
+
+        if (plan_id === self.currentPlan) {
+          self.updateCurrentPlan("");
+          self.updateCurrentProgress("");
+          self.currentPlan = '';
+          self.currentProgress = '';
+        }
+
         // redirects if delete the plan, that he is currently viewing
         if (self.$route.path === '/dashboard/viewplan/' + plan_id) {
           self.$router.push('/dashboard')
@@ -119,6 +135,14 @@ export default{
       }).catch(function (error) {
         console.error("Error removing document: ", error);
       });
+    },
+    finishCurrentPlan: function () {
+      if (this.activePlanId === this.currentPlan) {
+        this.updateCurrentPlan("");
+        this.updateCurrentProgress("");
+        this.currentPlan = '';
+        this.currentProgress = '';
+      }
     }
   }
 }

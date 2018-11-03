@@ -41,6 +41,8 @@
       return {
         user_id: firebase.auth().currentUser.uid,
         planCount: 0,
+        currentPlan: '',
+        currentProgress: '',
         planInfo: {},
         activePlanId: ''
       }

@@ -55,6 +55,28 @@ export default {
       };
       return this.db.collection('users').doc(this.user_id).update(updated_data); // return promise
     },
+    updateCurrentPlan: function(plan_id) {
+      // let db = firebase.firestore();
+      let updated_data = {
+        currentPlan: plan_id
+      };
+      return this.db.collection('users').doc(this.user_id).update(updated_data); // return promise
+    },
+    updateCurrentProgress: function(new_progress) {
+      // let db = firebase.firestore();
+      let updated_data = {
+        currentProgress: new_progress
+      };
+      return this.db.collection('users').doc(this.user_id).update(updated_data); // return promise
+    },
+    updateCurrentProgressInProcess: function() {
+      if (this.currentPlan === this.plan_id) {
+        let updated_data = {
+          currentProgress: this.currentState
+        };
+        return this.db.collection('users').doc(this.user_id).update(updated_data); // return promise
+      }
+    },
     updateUserPlanCount: function(planCount) {
       // let db = firebase.firestore();
       let updated_data = {
