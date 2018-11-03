@@ -85,9 +85,9 @@
 
       </div>
       <div class="container row">
-        <a href="" class="col l8 push-l1" id="show_btn" v-if="!show_portfolio" v-on:click="change_show_portfolio"><i
+        <a href="" class="col l8 push-l1" id="show_btn" v-if="!show_portfolio" v-on:click="changeShowPortfolio"><i
           class="medium material-icons">arrow_drop_down_circle</i>Show Portfolio Breakdown</a>
-        <a href="" class="col l8 push-l1" id="show_btn" v-else v-on:click="change_show_portfolio"><i
+        <a href="" class="col l8 push-l1" id="show_btn" v-else v-on:click="changeShowPortfolio"><i
           class="medium material-icons">cancel</i>Hide Portfolio Breakdown</a>
         <div class="col l8" id="pie_container" v-if="show_portfolio">
           <GChart
@@ -132,6 +132,7 @@
   import nextbar from "../dashboard/nextbar";
   import processFireBase from "../../mixins/processFireBase";
   import {GChart} from 'vue-google-charts';
+  import formatPieData from '../../mixins/formatPieData'
 
   export default {
     components: {
@@ -141,7 +142,7 @@
       'progressbar': progressbar,
       'nextbar': nextbar
     },
-    mixins: [processFireBase],
+    mixins: [processFireBase, formatPieData],
 
     data() {
       return {
@@ -152,6 +153,7 @@
         annual_expense: '',
         investment_period: 10,
         annual_investment: 10000,
+        table_data: [],
         rendered_status: false, // to check if the initial portfolio breakdown is rendered already or not
         show_portfolio: false,
         portfolio_idx: 5,
@@ -207,7 +209,7 @@
       }
     },
     methods: {
-      change_show_portfolio: function (e) {
+      changeShowPortfolio: function (e) {
         e.preventDefault();
         this.show_portfolio = !this.show_portfolio;
       },
@@ -293,17 +295,53 @@
         let self = this;
         this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
           function(res) {
-            const overall_data = res.data().income.income_data;
-            if (overall_data !== undefined) {
-              self.net_income = overall_data.netIncome;
+            const expense_status = res.data().expenses.status;
+            const income_data = res.data().income.income_data;
+            if (income_data !== undefined) {
+              self.net_income = income_data.netIncome;
+            }
+            if (!expense_status) { // if the status is 0, means not saved at all
+              self.preloadEstimateYearlyExpense(income_data.monthlyIncome);
+            } else { // else if there is expense data that is being saved
+              let total_expenses = 0;
+
+              // const car_status = res.data().car.status;
+              // const housing_status = res.data().housing.status;
+              // if (car_status) total_expenses += res.data().car.car_data.monthlyRepay * 12;
+              // if (housing_status) total_expenses += res.data().housing.housing_data.monthlyRepay * 12;
+
+              self.table_data = res.data().expenses.expenses_data;
+              for (let [key, value] of Object.entries(self.monthlyBreakdown)) {
+                total_expenses += value * 12;
+              }
+              self.annual_expense = total_expenses;
+              self.annual_investment = Math.floor((self.net_income - total_expenses)/1000) * 1000;
             }
 
           }
         ).catch( function (err) { // redirects if such plan does not exist
             console.log(err);
-            self.$router.push('/dashboard');
+            // self.$router.push('/dashboard');
           }
         )
+      },
+      preloadEstimateYearlyExpense(monthly_income) {
+        let data = JSON.stringify(false);
+
+        let xhr = new XMLHttpRequest();
+        // xhr.withCredentials = true;
+        let self = this;
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === this.DONE) {
+            const expense = parseInt(this.responseText);
+            self.annual_expense = expense*12;
+            self.annual_investment = Math.floor((self.net_income - self.annual_expense)/1000) * 1000;
+          }
+        });
+
+        xhr.open("GET", 'https://cors-anywhere.herokuapp.com/' + "http://dev.bambu.life:8081/api/TotalExpenseEstimator?monthly_income=" + monthly_income);
+        xhr.send(data);
       }
     },
     computed: {

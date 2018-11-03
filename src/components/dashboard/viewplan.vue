@@ -12,11 +12,11 @@
         <div class="display_box row center">
           <p class="col l12 process_title">Income</p>
           <p class="col l6 info_text">Annual Income:</p>
-          <p class="col l6 display_text">S$ {{ activePlanDetails.income.income_data.annualIncome }}</p>
+          <p class="col l6 display_text">S$ {{ activePlanDetails.income.income_data.annualIncome.toLocaleString() }}</p>
           <p class="col l6 info_text">Income Tax:</p>
-          <p class="col l6 display_text">S$ {{ activePlanDetails.income.income_data.incomeTax }}</p>
+          <p class="col l6 display_text">S$ {{ activePlanDetails.income.income_data.incomeTax.toLocaleString() }}</p>
           <p class="col l6 info_text">Net Income:</p>
-          <p class="col l6 display_text">S$ {{ activePlanDetails.income.income_data.netIncome }}</p>
+          <p class="col l6 display_text">S$ {{ activePlanDetails.income.income_data.netIncome.toLocaleString() }}</p>
           <div class="edit_btn_container">
             <router-link v-bind:to="'/dashboard/income/' + activePlanId" class="edit_btn right">Edit</router-link>
           </div>

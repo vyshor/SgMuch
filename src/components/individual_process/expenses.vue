@@ -148,7 +148,7 @@
           this.saveToFireBase();
         }
       },
-      preloadEstimateExpense() {
+      preloadEstimateExpense(monthly_income) {
         let data = JSON.stringify(false);
 
         let xhr = new XMLHttpRequest();
@@ -162,7 +162,7 @@
           }
         });
 
-        xhr.open("GET", 'https://cors-anywhere.herokuapp.com/' + "http://dev.bambu.life:8081/api/TotalExpenseEstimator?monthly_income=5000");
+        xhr.open("GET", 'https://cors-anywhere.herokuapp.com/' + "http://dev.bambu.life:8081/api/TotalExpenseEstimator?monthly_income=" + monthly_income);
         xhr.send(data);
       },
       estimateBreakdown(expense) {
@@ -211,11 +211,28 @@
             self.$router.push('/dashboard');
           }
         )
+      },
+      preloadSavedMonthlyIncomeInformation: function() {
+        let self = this;
+        this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
+          function(res) {
+            const overall_data = res.data().income.income_data;
+            if (overall_data !== undefined) {
+              const monthly_income = overall_data.monthlyIncome;
+              self.preloadEstimateExpense(monthly_income);
+            }
+
+          }
+        ).catch( function (err) { // redirects if such plan does not exist
+            console.log(err);
+            self.$router.push('/dashboard');
+          }
+        )
       }
     },
     mounted() {
       this.loadSavedExpensesInformation();
-      this.preloadEstimateExpense();
+      this.preloadSavedMonthlyIncomeInformation();
     },
     computed: {
       saved_data: function () {

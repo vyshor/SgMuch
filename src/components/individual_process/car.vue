@@ -142,7 +142,6 @@
     methods: {
       getPrice: function (e) {
         e.preventDefault();
-        // this.updateCarousel();
         let data = JSON.stringify({
           country: "Thailand",
           brand: this.selected_brand,
@@ -153,11 +152,24 @@
         let self = this;
 
         xhr.addEventListener("readystatechange", function () {
+          if (Math.floor(this.status/100) === 5) { // internal server error status
+            console.log("API server down. Using some random value as dummy values");
+            self.calculatedPrice = Math.floor(Math.random() * 50000 + 20000);
+
+            self.saveToFireBase();
+            self.getLoanDetails(self.prepMoneySmartURL());
+            self.updateCarousel();
+            return; //terminates so that it does not keep waiting for its status
+          }
           if (this.readyState === this.DONE) {
             let reply_data = JSON.parse(this.responseText);
+            // console.log(reply_data);
             self.calculatedPrice = parseInt(parseFloat(reply_data['carPrice'][0]['carprice']) * 0.042);
             self.saveToFireBase();
             self.getLoanDetails(self.prepMoneySmartURL());
+            self.updateCarousel(); // this needed to inserted at the back because the updating of carousel will
+            // rapidly change all the variables in a very short period
+            // and plus its async thats why it will mess with the variables
           }
         });
 
@@ -252,6 +264,10 @@
         // console.log(this.selectedBank_idx);
       },
       updateCarousel: function () {
+        // console.log(selected_model);
+        // if (selected_model !== null) {
+        //   this.selected_model = selected_model;
+        // }
         let instance = M.Carousel.getInstance(this.$refs.car_images);
         let brand_index = Object.keys(this.model_table).findIndex(x => x === this.selected_brand);
         let model_index = Object.keys(this.model_table[this.selected_brand]).findIndex(x => x === this.selected_model);
@@ -312,6 +328,8 @@
               self.selected_brand = car_data.brand;
               self.selected_model = car_data.model;
               self.calculatedPrice = car_data.price;
+              self.updateModelDropdown(car_data.model);
+              self.updateCarousel();
               // self.saved_bank_details = car_data.loanBool;
             }
 
@@ -325,8 +343,8 @@
     }
     ,
     mounted() {
-      this.loadSavedCarInformation();
       this.getCarList();
+      this.loadSavedCarInformation();
       // self.$refs.car_images.reSlick();
       // console.log(this.$refs.car_images);
       // console.log($(this.$refs.car_images));

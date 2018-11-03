@@ -340,6 +340,14 @@
         // xhr.withCredentials = true;
 
         xhr.addEventListener("readystatechange", function () {
+          if (Math.floor(this.status/100) === 5) { // internal server error status
+            console.log("API server down. Using some random value as dummy values");
+            self.house_price = Math.floor(Math.random() * 200000 + 600000);
+
+            self.saveToFireBase();
+            self.getLoanDetails(self.prepMoneySmartURL());
+            return; //terminates so that it does not keep waiting for its status
+          }
           if (this.readyState === this.DONE) {
             let house_price = JSON.parse(this.responseText);
             house_price = parseInt(house_price['housePrice'][0]['price']);
@@ -347,7 +355,7 @@
             self.saveToFireBase();
             self.getLoanDetails(self.prepMoneySmartURL());
           } else {
-            self.house_price = 800000; // dummy filler for now (because their API is down)
+            // self.house_price = 800000; // dummy filler for now (because their API is down)
           }
         });
 
