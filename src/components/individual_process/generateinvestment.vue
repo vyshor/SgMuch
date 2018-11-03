@@ -5,7 +5,7 @@
     <div class="row center" id="dashboard_main">
       <div class="container row infobox">
         <div class="row" id="back_btn_container">
-          <router-link v-bind:to="'/dashboard/viewplan/' + user_id"><a class="btn left" type="Submit" value="Back" id="back_btn">Back</a></router-link>
+          <router-link v-bind:to="'/dashboard/'"><a class="btn left" type="Submit" value="Back" id="back_btn">Back</a></router-link>
         </div>
         <p class="col l7 info_text">
           Annual Net Income:
