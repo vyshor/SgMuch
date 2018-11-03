@@ -5,7 +5,12 @@
     <a class="btn btn-large" id="start_new_plan" v-on:click="startNewPlan">Start new plan</a>
     <flex class="row" id="dashboard_main">
       <div id="loading_screen" class="col l9 flexbox_el" v-if="!doneLoading">
-        Loading
+        <div class="container center">
+          <p class="animated pulse infinite loading_text">Loading Plan Details...</p>
+          <div class="progress">
+            <div class="indeterminate"></div>
+          </div>
+        </div>
       </div>
       <div id="plan_details" class="col l9 flexbox_el" v-else>
         <p class="center" id="plan_name">{{ activePlanDetails.planName }}</p>
@@ -272,6 +277,13 @@
     padding-bottom: 1%;
     border-radius: 10px;
   }
+
+  .loading_text {
+    font-family: 'Helvetica Rounded';
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
 
 
 </style>

@@ -4,6 +4,11 @@ import Vue from 'vue'; // needed for dashboardPlansMethods mixins
 export default{
   methods: {
     startNewPlan: function () {
+      if (this.planCount >= 3) {
+        alert("The maximum number of plans has been reached. Delete an existing plan to continue.");
+        return;
+      }
+
       let db = firebase.firestore();
 
       db.settings({

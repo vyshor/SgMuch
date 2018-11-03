@@ -22,7 +22,7 @@
         <div class="row" v-show="changingDetails">
           <p class="col l4 push-l1 info_text">Current Password</p>
           <div class="input-field col l3 push-l1">
-            <input v-model="password" type="password" name="password" id="password_field" class="validate"/>
+            <input v-model="password" type="password" name="password" id="password_field"/>
           </div>
           <span class="col l12 error_message" v-if="password_error_message">{{ password_error_message }}</span>
         </div>
@@ -70,6 +70,10 @@
         let self = this;
         this.error_message = "";
         this.password_error_message = "";
+        if (this.name === "") {
+          this.error_message = "Please enter a name";
+          return;
+        }
         if (SHA256(this.password).toString() === this.hashed_password) {
           // Correct current password
           // Update firebase own account
@@ -89,6 +93,11 @@
             if (error.code === "auth/requires-recent-login") {
               // show relogin message
               self.error_message = "Relogin is required before changing details."
+            }
+
+            if (error.code === "auth/invalid-email") {
+              // show relogin message
+              self.error_message = "Invalid email address. Please enter another email address."
             }
 
             else if (error.code === "auth/email-already-in-use") {

@@ -141,7 +141,7 @@
         });
 
         // Initialise the user info
-        db.collection('users').doc('' + uid).set({name:name, email:email, password: SHA256(password).toString(), planCount: 0});
+        db.collection('users').doc('' + uid).set({name:name, email:email, password: SHA256(password).toString(), planCount: 0, currentPlan: ''});
       },
       onCaptchaVerified: function () {
         this.recaptchaBool = true;
