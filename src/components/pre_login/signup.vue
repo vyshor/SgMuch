@@ -22,8 +22,13 @@
           <div class="row">
             <label for="password" class="col l2 push-l3">Password</label>
             <div class="input-field col l4 push-l3">
-              <input type="password" name="password" v-model="password" id="password" class="validate">
-              <meter max="4" id="password-strength-meter" v-bind:value="meter_value"></meter>
+              <!--<input type="password" name="password" v-model="password" id="password" class="validate">-->
+              <password
+                v-model="password"
+                :toggle="true"
+                @score="showScore"
+                @feedback="showFeedback"
+              />
               <div id="password-strength-text-container">
                 <p id="password-strength-text">{{ password_strength }}</p>
               </div>
@@ -47,11 +52,13 @@
   import image from "../../assets/logo.png";
   import SHA256 from "crypto-js/sha256";
   import VueRecaptcha from "vue-recaptcha";
+  import Password from 'vue-password-strength-meter';
 
   export default {
     name: "signUp",
     components: {
-      VueRecaptcha
+      VueRecaptcha,
+      Password
     },
     data() {
       return {
@@ -59,6 +66,7 @@
         name: '',
         email: '',
         password: '',
+        meter_value: 0,
         recaptchaBool: false,
         strength: {
           0: "Worst",
@@ -72,9 +80,6 @@
       }
     },
     computed: {
-      meter_value: function() {
-        return zxcvbn(this.password).score;
-      },
       password_strength: function() {
         if (this.password !== "") {
           return "Strength: " + this.strength[this.meter_value];
@@ -96,14 +101,14 @@
         if (this.name === "" || this.email === "" || this.password === "") {
           self.error_message = "Please check your input. All fields must be filled";
           return;
-        } else if (this.meter_value <= 2) {
+        } else if (this.meter_value <= 1) {
           self.error_message = "Please choose a stronger password";
           return;
         } else if (this.recaptchaBool === false) {
           self.error_message = "Please tick reCAPTCHA checkbox";
           return;
         }
-        // If the strength/meter value is 2 and below, reject : Please choose a stronger password
+        // If the strength/meter value is 1 and below, reject : Please choose a stronger password
 
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
           (user) => {
@@ -149,6 +154,13 @@
       onCaptchaExpired: function () {
         this.$refs.recaptcha.reset();
         this.recaptchaBool = false;
+      },
+      showFeedback ({suggestions, warning}) {
+        // console.log('🙏', suggestions);
+        // console.log('⚠', warning);
+      },
+      showScore (score) {
+        this.meter_value = score;
       }
 
     }

@@ -107,6 +107,10 @@ export default {
 
       let docRef = this.db.collection("users").doc(this.user_id).collection("saved_plans").doc(plan_id);
       return docRef.get(); // return the promise
+    },
+    updatePlanName: function(uid, plan_id, plan_name){
+      // let db = firebase.firestore();
+      this.db.collection('users').doc('' + uid).collection("saved_plans").doc(plan_id).update({planName: plan_name});
     }
 
   },

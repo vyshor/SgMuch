@@ -13,7 +13,12 @@
         </div>
       </div>
       <div id="plan_details" class="col l9 flexbox_el" v-else>
-        <p class="center" id="plan_name">{{ activePlanDetails.planName }}</p>
+        <div class="center row" v-if="!changingName">
+        <p id="plan_name" class="">{{ activePlanDetails.planName }} <a class="edit_btn btn-floating right" id="rename_btn" v-on:click="changeName">Rename</a></p>
+        </div>
+         <div class="center row" v-else>
+        <input type="text" id="plan_name" class="" v-model="activePlanDetails.planName"></input><a class="edit_btn btn-floating right" id="rename_btn" v-on:click="changeName">SaveName</a>
+        </div>
         <div class="display_box row center">
           <p class="col l12 process_title">Income</p>
           <p class="col l6 info_text">Annual Income:</p>
@@ -125,6 +130,7 @@
         planCount: 0,
         currentPlan: '',
         currentProgress: '',
+        changingName: false,
         planInfo: {},
         activePlanId: this.$route.params.plan_id,
         activePlanDetails: {},
@@ -146,6 +152,13 @@
           }
           self.doneLoading = true;
         })
+      },
+      changeName: function() {
+        this.changingName = !this.changingName;
+        if (this.changingName === false) {
+          this.updatePlanName(this.user_id, this.activePlanId, this.activePlanDetails.planName);
+          this.preloadPlanDetails();
+        }
       }
     },
     mounted() {
@@ -215,6 +228,8 @@
     font-family: 'Helvetica Rounded';
     font-weight: bold;
     font-size: 2.5rem;
+
+    margin-left: 20%;
   }
 
   .display_box {
@@ -289,6 +304,13 @@
     font-family: 'Helvetica Rounded';
     font-weight: bold;
     font-size: 1.5rem;
+  }
+
+  #rename_btn {
+    text-align: center;
+    padding-right: 9%;
+    padding-left: 2%;
+    margin-right: 10%;
   }
 
 
