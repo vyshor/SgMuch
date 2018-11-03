@@ -67,7 +67,8 @@
         email: '',
         password: '',
         meter_value: 0,
-        recaptchaBool: false,
+        recaptchaBool: true,
+        recaptchaToken: '',
         strength: {
           0: "Worst",
           1: "Bad",
@@ -95,6 +96,8 @@
     methods: {
       signUp: function (e) {
         e.preventDefault();
+        // this.verifyToken();
+        // return;
         let self = this;
         this.error_message = "";
         // Check if input fields are empty : Please check your input. All must be filled
@@ -148,8 +151,9 @@
         // Initialise the user info
         db.collection('users').doc('' + uid).set({name:name, email:email, password: SHA256(password).toString(), planCount: 0, currentPlan: '', currentProgress: ''});
       },
-      onCaptchaVerified: function () {
+      onCaptchaVerified: function (recaptchaToken) {
         this.recaptchaBool = true;
+        this.recaptchaToken = recaptchaToken;
       },
       onCaptchaExpired: function () {
         this.$refs.recaptcha.reset();
@@ -161,6 +165,25 @@
       },
       showScore (score) {
         this.meter_value = score;
+      },
+      verifyToken: function() {
+        let self = this;
+        let data = {
+          secret: '6LeTW3cUAAAAAByLClP5M1RtB4cqeg4i5YOmGyBb',
+          response: this.recaptchaToken
+        };
+        data = JSON.stringify(data);
+        let xhr = new XMLHttpRequest();
+        // xhr.withCredentials = true;
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === this.DONE) {
+            let res = JSON.parse(this.responseText);
+            console.log(res);
+          }
+        });
+        xhr.open("POST", "https://www.google.com/recaptcha/api/siteverify", true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(data);
       }
 
     }
