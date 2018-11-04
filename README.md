@@ -1,18 +1,13 @@
-# vuejs2blogpractice
+# SgMuch
 
-> Blog Practice
+> Web application for young university graduates to be aware of their future financial cost and make the according saving and investing plan to achieve the goal
 
-## Build Setup
+###### [Click here for Adobe XD Prototype](https://xd.adobe.com/view/170ea815-36ad-4361-69f4-7c6f144f3121-613f/)
 
-``` bash
-# install dependencies
-npm install
+###### [Click here for the Website](https://sgmuch.herokuapp.com/)
 
-# serve with hot reload at localhost:8080
-npm run dev
+### Tl;dr
 
-# build for production with minification
-npm run build
-```
-
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+1. Financial and Investing Planner based in SG
+2. Make use of multiple API online to obtain income, expenses, and bank loan details including [Bambu](https://developer.bambu.life/), [MoneySmart](https://www.moneysmart.sg/), data from [Singapore's Public Data](https://data.gov.sg/)
+3. Built using [VueJS](https://vuejs.org/) as framework, uses [Materialize](https://www.npmjs.com/package/vue-materialize) for interface, Google [Maps](https://www.npmjs.com/package/vue2-google-maps) and [Charts](https://www.npmjs.com/package/vue-google-charts) for interactive map and diagram.
