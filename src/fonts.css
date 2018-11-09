@@ -13,12 +13,12 @@
   /*url(./assets/fonts/HelveticaRounded-BoldObl.otf) format("opentype");*/
 }
 
-@font-face {
-  font-family: "Arial";
-  src: url(./assets/fonts/arial.ttf) format("truetype");
-}
+/*@font-face {*/
+  /*font-family: "Arial";*/
+  /*src: url(./assets/fonts/arial.ttf) format("truetype");*/
+/*}*/
 
-@font-face {
-  font-family: "Calibri";
-  src: url(./assets/fonts/Calibri.ttf) format("truetype");
-}
+/*@font-face {*/
+  /*font-family: "Calibri";*/
+  /*src: url(./assets/fonts/Calibri.ttf) format("truetype");*/
+/*}*/
