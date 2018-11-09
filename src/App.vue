@@ -20,7 +20,7 @@
   }
 </script>
 
-<style scoped>
+<style>
   @font-face {
     font-family: "Hobo Std";
     src: url(assets/fonts/HoboStd.otf) format("otf");
