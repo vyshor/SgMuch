@@ -23,10 +23,6 @@
         "nissan-note": "below1600",
         "nissan-qashqai": "above1600"
     },
-    "Mitsubishi": {
-        "mitsubishi-attrage": "below1600",
-        "mitsubishi-outlander": "above1600"
-    },
     "Mazda": {
         "mazda-2-hatchback": "below1600",
         "mazda-3-sedan": "above1600"

@@ -37,6 +37,9 @@
             <input class="btn color_btn" type="Submit" value="Add to list" v-on:click="addEntry" id="add_to_list_btn"/>
           </div>
         </form>
+        <div class="container center row" v-if="error_message">
+          <p class="error_message">{{ error_message }}</p>
+        </div>
         <div class="container center row">
           <div class="col l6 push-l2">
             <button class="btn color_btn" type="Submit" v-on:click="estimateExpense" id="estimate_btn"><i
@@ -126,7 +129,10 @@
         activity: '',
         amount: '',
         frequency: 'daily',
+        monthly_income: 0,
+        estimated_total_expense: 0,
         estimate_expense_loading: false,
+        error_message: '',
         table_data: [{
           activity: "Grocery",
           amount: 50,
@@ -149,9 +155,15 @@
       },
       addEntry(e) {
         e.preventDefault();
+        this.error_message = "";
+        if (this.monthly_income < (this.totalMonthlyBreakdown() + this.getMonthlyExpenseForOneActivity(parseInt(this.amount), this.frequency))) {
+          // In the case that the activity exceeds the thing
+          this.error_message = "Invalid Input! Monthly expenses would exceed monthly income.";
+          return;
+        }
         this.table_data.push({
           activity: this.activity,
-          amount: this.amount,
+          amount: parseInt(this.amount),
           frequency: this.frequency
         });
         this.saveToFireBase();
@@ -163,7 +175,15 @@
       estimateExpense() {
         this.estimate_expense_loading = true;
         if (this.preloaded_estimated_data.length) {
+          this.error_message = "";
+          if (this.monthly_income < (this.totalMonthlyBreakdown() + this.estimated_total_expense)) {
+            // In the case that the activity exceeds the thing
+            this.error_message = "Unable to estimate. Monthly expenses would exceed monthly income.";
+            this.estimate_expense_loading = false;
+            return;
+          }
           this.table_data = this.table_data.concat(this.preloaded_estimated_data);
+          this.table_data = Object.values(this.table_data.reduce((acc,cur)=>Object.assign(acc,{[cur.activity]:cur}),{})); // Remove duplicates
           this.estimate_expense_loading = false;
           this.saveToFireBase();
         }
@@ -178,6 +198,7 @@
         xhr.addEventListener("readystatechange", function () {
           if (this.readyState === this.DONE) {
             const expense = parseInt(this.responseText);
+            self.estimated_total_expense = expense;
             self.estimateBreakdown(expense);
           }
         });
@@ -217,6 +238,34 @@
           this.estimateExpense();
         }
       },
+      getMonthlyExpenseForOneActivity(amount, frequency){
+        let final_amount= 0;
+        switch(frequency) {
+          case "daily":
+            final_amount = amount*30;
+            break;
+          case "weekly":
+            final_amount = amount*4;
+            break;
+          case "monthly":
+            final_amount = amount;
+            break;
+          case "yearly":
+            final_amount = Math.floor(amount/12);
+            break;
+          default:
+            final_amount = amount;
+        }
+        return final_amount;
+      },
+      totalMonthlyBreakdown: function() {
+        let total_amount = 0;
+        const monthly_breakdown = this.monthlyBreakdown;
+        for (let [key, value] of Object.entries(monthly_breakdown)) {
+          total_amount += value;
+        }
+        return total_amount;
+      },
       loadSavedExpensesInformation: function () {
         let self = this;
         this.loadPlanFromFireBase(this.user_id, this.plan_id).then(
@@ -241,8 +290,8 @@
           function (res) {
             const overall_data = res.data().income.income_data;
             if (overall_data !== undefined) {
-              const monthly_income = overall_data.monthlyIncome;
-              self.preloadEstimateExpense(monthly_income);
+              self.monthly_income = overall_data.monthlyIncome;
+              self.preloadEstimateExpense(self.monthly_income);
             }
 
           }
@@ -366,6 +415,12 @@
     font-weight: bold;
     font-size: 1.25rem;
     margin: 0;
+  }
+
+  .error_message {
+    font-size: 1.2rem;
+    font-family: 'Arial';
+    color: red;
   }
 
 </style>
