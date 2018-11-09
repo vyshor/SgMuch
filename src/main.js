@@ -11,7 +11,6 @@ import * as VueGoogleMaps from "vue2-google-maps"
 import VueGoogleCharts from 'vue-google-charts'
 import VueFlex from "vue-flex";
 import "vue-flex/dist/vue-flex.css";
-import "./style.css";
 
 Vue.use(VueResource);
 Vue.use(AsyncComputed);
