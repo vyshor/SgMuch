@@ -9,7 +9,7 @@
 
 <script>
   import bottom_bar from './components/bottom_bar.vue';
-  import "./style.css";
+  import "./fonts.css";
 
   export default {
     components: {

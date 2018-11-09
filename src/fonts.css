@@ -1,0 +1,24 @@
+@font-face {
+  font-family: "Hobo Std";
+  src: url(./assets/fonts/HoboStd.otf) format("opentype");
+}
+
+@font-face {
+  font-family: "Helvetica Rounded";
+  src: url(./assets/fonts/HelveticaRounded-Black.otf) format("opentype"),
+  url(./assets/fonts/HelveticaRounded-BlackObl.otf) format("opentype"),
+  url(./assets/fonts/HelveticaRounded-Bold.otf) format("opentype"),
+  url(./assets/fonts/HelveticaRounded-BoldCond.otf) format("opentype"),
+  url(./assets/fonts/HelveticaRounded-BoldCondObl.otf) format("opentype"),
+  url(./assets/fonts/HelveticaRounded-BoldObl.otf) format("opentype");
+}
+
+@font-face {
+  font-family: "Arial";
+  src: url(./assets/fonts/arial.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Calibri";
+  src: url(./assets/fonts/Calibri.ttf) format("truetype");
+}
