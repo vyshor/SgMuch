@@ -2,7 +2,7 @@
 
 > Web application for young university graduates to be aware of their future financial cost and make the necessary saving and investing plan to achieve the goal
 
-###### [Click here for Adobe XD Prototype](https://xd.adobe.com/view/170ea815-36ad-4361-69f4-7c6f144f3121-613f/)
+###### [Click here for Adobe XD Prototype](https://xd.adobe.com/view/5e7bd065-211e-46f8-47ff-c44290a97cdb-284a/?fullscreen)
 
 ###### [Click here for the Website](https://sgmuch.herokuapp.com/)
 
